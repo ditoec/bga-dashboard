@@ -112,7 +112,13 @@ function lineChart(wrap, { categories, series, height = 220, valueFormat = (v) =
     svg.appendChild(label);
   });
 
-  series.forEach((s) => {
+  // Deteksi tabrakan label-akhir: jika dua seri berakhir berdekatan secara
+  // vertikal, jangan menumpuk teks (lihat marks-and-anatomy.md) — sembunyikan
+  // nilai langsung untuk titik yang bertabrakan dan andalkan legenda + tooltip.
+  const lastY = series.map((s) => yScale(s.values[s.values.length - 1]));
+  const collides = lastY.map((y, idx) => lastY.some((y2, idx2) => idx2 !== idx && Math.abs(y - y2) < 13));
+
+  series.forEach((s, si) => {
     const points = s.values.map((v, i) => [xScale(i), yScale(v)]);
     if (series.length === 1) {
       const areaPath = [`M ${points[0][0]},${yScale(minVal)}`, ...points.map((p) => `L ${p[0]},${p[1]}`), `L ${points[points.length - 1][0]},${yScale(minVal)}`, "Z"].join(" ");
@@ -121,13 +127,15 @@ function lineChart(wrap, { categories, series, height = 220, valueFormat = (v) =
     const linePath = points.map((p, i) => `${i === 0 ? "M" : "L"} ${p[0]},${p[1]}`).join(" ");
     svg.appendChild(svgEl("path", { d: linePath, fill: "none", stroke: s.color, "stroke-width": 2, "stroke-linejoin": "round", "stroke-linecap": "round" }));
 
-    // marker akhir + label langsung
+    // marker akhir + label langsung (dilewati jika bertabrakan dengan seri lain)
     const last = points[points.length - 1];
     svg.appendChild(svgEl("circle", { cx: last[0], cy: last[1], r: 5, fill: cssVar("--surface-1") }));
     svg.appendChild(svgEl("circle", { cx: last[0], cy: last[1], r: 4, fill: s.color }));
-    const endLabel = svgEl("text", { class: "data-label", x: Math.min(last[0] + 6, width - padding.right), y: last[1] - 8, "text-anchor": last[0] > width - padding.right - 40 ? "end" : "start" });
-    endLabel.textContent = valueFormat(s.values[s.values.length - 1]);
-    svg.appendChild(endLabel);
+    if (!collides[si]) {
+      const endLabel = svgEl("text", { class: "data-label", x: Math.min(last[0] + 6, width - padding.right), y: last[1] - 8, "text-anchor": last[0] > width - padding.right - 40 ? "end" : "start" });
+      endLabel.textContent = valueFormat(s.values[s.values.length - 1]);
+      svg.appendChild(endLabel);
+    }
   });
 
   // crosshair hover + tooltip bersama
@@ -275,6 +283,74 @@ function donutChart(wrap, { categories, values, colors, centerLabel, centerSub, 
       }))
     ),
   };
+}
+
+// ---- Horizontal bar chart (ranked, single series) ----
+function horizontalBarChart(wrap, { categories, values, colors, unit = "", rowHeight = 30, valueFormat = (v) => formatNumber(v, 1) }) {
+  wrap.innerHTML = "";
+  const width = wrap.clientWidth || 560;
+  const padding = { top: 4, right: 60, bottom: 4, left: 128 };
+  const height = rowHeight * categories.length + padding.top + padding.bottom;
+  const innerW = width - padding.left - padding.right;
+
+  const maxVal = niceAxisMax(Math.max(...values) * 1.1);
+  const xScale = (v) => (v / maxVal) * innerW;
+  const colorFor = (i) => (Array.isArray(colors) ? colors[i] : colors);
+
+  const svg = svgEl("svg", { width: "100%", height, viewBox: `0 0 ${width} ${height}` });
+  const bars = [];
+
+  categories.forEach((c, i) => {
+    const y = padding.top + i * rowHeight;
+    const barH = 16;
+    const by = y + (rowHeight - barH) / 2;
+    const w = Math.max(xScale(values[i]), 2);
+
+    const label = svgEl("text", { x: padding.left - 10, y: y + rowHeight / 2 + 4, "text-anchor": "end" });
+    label.textContent = c;
+    svg.appendChild(label);
+
+    const rect = svgEl("rect", { x: padding.left, y: by, width: w, height: barH, rx: 4, ry: 4, fill: colorFor(i) });
+    svg.appendChild(rect);
+
+    const valLabel = svgEl("text", { class: "data-label", x: padding.left + w + 8, y: y + rowHeight / 2 + 4, "text-anchor": "start" });
+    valLabel.textContent = valueFormat(values[i]) + unit;
+    svg.appendChild(valLabel);
+
+    bars.push({ rect, x: padding.left, y, w: innerW, h: rowHeight, value: values[i], cat: c, color: colorFor(i) });
+  });
+
+  wrap.appendChild(svg);
+  const tip = ensureTooltip(wrap);
+
+  bars.forEach((b) => {
+    const hit = svgEl("rect", { x: b.x, y: b.y, width: b.w, height: b.h, fill: "transparent" });
+    svg.appendChild(hit);
+    hit.addEventListener("pointermove", (evt) => {
+      b.rect.setAttribute("opacity", 0.85);
+      tip.innerHTML = "";
+      const row = document.createElement("div");
+      row.className = "viz-tooltip-row";
+      const key = document.createElement("span");
+      key.className = "viz-tooltip-key";
+      key.style.background = b.color;
+      const name = document.createElement("span");
+      name.className = "viz-tooltip-name";
+      name.textContent = b.cat;
+      const val = document.createElement("span");
+      val.className = "viz-tooltip-val";
+      val.textContent = valueFormat(b.value) + unit;
+      row.append(key, name, val);
+      tip.appendChild(row);
+      tip.classList.add("show");
+      const rect = wrap.getBoundingClientRect();
+      positionTooltip(tip, wrap, evt.clientX - rect.left, evt.clientY - rect.top);
+    });
+    hit.addEventListener("pointerleave", () => {
+      b.rect.setAttribute("opacity", 1);
+      tip.classList.remove("show");
+    });
+  });
 }
 
 // ---- Sparkline untuk kartu KPI ----

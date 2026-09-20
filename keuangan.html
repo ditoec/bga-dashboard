@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Keuangan — Dasbor BGA Group</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="css/style.css" />
+</head>
+<body data-page="keuangan.html">
+<div id="site-header"></div>
+<div class="app">
+
+  <div class="page-intro">
+    <p class="page-eyebrow">Keuangan</p>
+    <h2>Laba rugi, neraca &amp; arus kas</h2>
+    <p>Ringkasan 5 tahun (2021–2025) dari tabel Financial Highlights Annual Report 2025 — seluruh nilai dalam Rupiah kecuali dinyatakan lain.</p>
+    <span class="asof" id="asof-label"></span>
+  </div>
+
+  <section class="kpi-grid" id="kpi-grid-keuangan"></section>
+
+  <section class="grid-2">
+    <div class="card">
+      <div class="card-head">
+        <div><p class="card-title">Pendapatan &amp; EBITDA</p><p class="card-subtitle">2021–2025 · Rp miliar · CAGR pendapatan 13,0%</p></div>
+        <div class="legend" id="legend-revenue-ebitda"></div>
+      </div>
+      <div class="chart-wrap" id="chart-revenue-ebitda"></div>
+    </div>
+    <div class="card">
+      <div class="card-head">
+        <div><p class="card-title">Laba bersih (atribusi pemilik)</p><p class="card-subtitle">2021–2025 · Rp miliar</p></div>
+      </div>
+      <div class="chart-wrap" id="chart-net-profit"></div>
+    </div>
+  </section>
+
+  <section class="grid-2">
+    <div class="card">
+      <div class="card-head">
+        <div><p class="card-title">Margin profitabilitas</p><p class="card-subtitle">2021–2025 · % dari pendapatan</p></div>
+        <div class="legend" id="legend-margins"></div>
+      </div>
+      <div class="chart-wrap" id="chart-margins"></div>
+    </div>
+    <div class="card">
+      <div class="card-head">
+        <div><p class="card-title">Neraca ringkas</p><p class="card-subtitle">2021–2025 · Rp miliar</p></div>
+        <div class="legend" id="legend-balance"></div>
+      </div>
+      <div class="chart-wrap" id="chart-balance"></div>
+    </div>
+  </section>
+
+  <section class="grid-2">
+    <div class="card">
+      <div class="card-head">
+        <div><p class="card-title">Return on Equity &amp; Assets</p><p class="card-subtitle">2021–2025 · %</p></div>
+        <div class="legend" id="legend-roe-roa"></div>
+      </div>
+      <div class="chart-wrap" id="chart-roe-roa"></div>
+    </div>
+    <div class="card">
+      <div class="card-head">
+        <div><p class="card-title">Rasio leverage</p><p class="card-subtitle">2021–2025 · kali (x)</p></div>
+        <div class="legend" id="legend-leverage"></div>
+      </div>
+      <div class="chart-wrap" id="chart-leverage"></div>
+    </div>
+  </section>
+
+  <section class="grid-2">
+    <div class="card">
+      <div class="card-head"><div><p class="card-title">Arus kas FY2025</p></div></div>
+      <div class="stat-row" id="stat-cashflow"></div>
+    </div>
+    <div class="card">
+      <div class="card-head"><div><p class="card-title">Dividen FY2025</p></div></div>
+      <div class="stat-row" id="stat-dividend" style="grid-template-columns:1fr;"></div>
+    </div>
+  </section>
+
+  <p class="section-title">Proyeksi &amp; asumsi 2026</p>
+  <p class="section-subtitle">Panduan manajemen dari Chairman's Message, Annual Report 2025</p>
+  <section class="card" style="margin-bottom:12px;">
+    <div class="fact-grid" id="fact-outlook"></div>
+  </section>
+
+</div>
+<div id="site-footer"></div>
+
+<script src="js/data.js"></script>
+<script src="js/charts.js"></script>
+<script src="js/nav.js"></script>
+<script src="js/app.js"></script>
+<script>document.getElementById("asof-label").textContent = AS_OF;</script>
+</body>
+</html>

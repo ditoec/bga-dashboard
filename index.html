@@ -3,138 +3,69 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>PT Bumitama Gunajaya Agro — Dasbor Operasional</title>
+<title>Ringkasan — Dasbor BGA Group</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&display=swap" rel="stylesheet" />
 <link rel="stylesheet" href="css/style.css" />
 </head>
-<body>
+<body data-page="index.html">
+<div id="site-header"></div>
 <div class="app">
 
-  <header class="header">
-    <div class="brand">
-      <div class="brand-mark">BGA</div>
-      <div class="brand-text">
-        <h1>PT Bumitama Gunajaya Agro — Dasbor Operasional</h1>
-        <p>Ringkasan kinerja Grup BGA, disusun dari keterbukaan publik Bumitama Agri Ltd (SGX: P8Z)</p>
-      </div>
-    </div>
-    <div class="header-right">
-      <span class="asof" id="asof-label"></span>
-      <button class="theme-toggle" id="theme-toggle" type="button">Mode Gelap</button>
-    </div>
-  </header>
-
-  <div class="notice-bar">
-    Angka tingkat Grup diambil dari laporan resmi Bumitama Agri Ltd, induk usaha BGA Group yang tercatat di Bursa Efek Singapura — BGA Group sendiri tidak menerbitkan laporan terpisah. Rincian kinerja per kebun/pabrik bersifat internal dan tidak dipublikasikan, sehingga tidak ditampilkan di sini. Lihat <a href="#sources">sumber data</a> di bagian bawah halaman.
+  <div class="page-intro">
+    <p class="page-eyebrow">Ringkasan Grup</p>
+    <h2>Kinerja BGA Group, FY2025</h2>
+    <p>Titik masuk dasbor manajemen — capaian tahun berjalan dibandingkan FY2024, disusun dari Bumitama Agri Ltd. Annual Report 2025.</p>
+    <span class="asof" id="asof-label"></span>
   </div>
 
-  <section class="kpi-grid" id="kpi-grid"></section>
+  <section class="kpi-grid" id="kpi-grid-ringkasan"></section>
 
   <section class="grid-2">
     <div class="card">
       <div class="card-head">
         <div>
-          <p class="card-title">Tren luas tertanam</p>
-          <p class="card-subtitle">2021–2025 · hektare, akhir tahun</p>
+          <p class="card-title">Pendapatan &amp; EBITDA</p>
+          <p class="card-subtitle">2021–2025 · Rp triliun</p>
         </div>
+        <div class="legend" id="legend-ringkasan-financial"></div>
       </div>
-      <div class="chart-wrap" id="chart-planted"></div>
+      <div class="chart-wrap" id="chart-ringkasan-financial"></div>
     </div>
     <div class="card">
       <div class="card-head">
         <div>
-          <p class="card-title">Tren rendemen CPO (OER)</p>
-          <p class="card-subtitle">2023–2025 · % TBS diolah menjadi CPO</p>
+          <p class="card-title">TBS Internal &amp; Produksi CPO</p>
+          <p class="card-subtitle">2021–2025 · ribu metrik ton</p>
         </div>
+        <div class="legend" id="legend-ringkasan-produksi"></div>
       </div>
-      <div class="chart-wrap" id="chart-oer"></div>
+      <div class="chart-wrap" id="chart-ringkasan-produksi"></div>
     </div>
   </section>
 
-  <section class="grid-2">
-    <div class="card">
-      <div class="card-head">
-        <div>
-          <p class="card-title">Pendapatan &amp; laba bersih</p>
-          <p class="card-subtitle" id="financial-subtitle">Rp triliun</p>
-        </div>
-        <div class="legend" id="legend-financial"></div>
-      </div>
-      <div class="chart-wrap" id="chart-financial"></div>
-    </div>
-    <div class="card">
-      <div class="card-head">
-        <div>
-          <p class="card-title">Keberlanjutan &amp; tenaga kerja</p>
-          <p class="card-subtitle">Sertifikasi, produksi bersertifikat dan karyawan — FY2025</p>
-        </div>
-      </div>
-      <div id="sustainability-panel"></div>
-    </div>
-  </section>
+  <p class="section-title">Wilayah operasi</p>
+  <p class="section-subtitle">Tiga provinsi — lihat halaman Wilayah untuk rincian lengkap</p>
+  <section class="region-grid" id="ringkasan-region-cards"></section>
 
-  <section class="grid-3">
-    <div class="card">
-      <div class="card-head">
-        <div>
-          <p class="card-title">Inti vs. plasma</p>
-          <p class="card-subtitle">Komposisi luas tertanam 2025</p>
-        </div>
-      </div>
-      <div class="chart-wrap donut-wrap" id="chart-nucleus"></div>
-      <div class="legend" id="legend-nucleus" style="justify-content:center; margin-top:8px;"></div>
-    </div>
-    <div class="card">
-      <div class="card-head">
-        <div>
-          <p class="card-title">Estimasi sebaran wilayah</p>
-          <p class="card-subtitle">Proporsional dari data 2022</p>
-        </div>
-      </div>
-      <div class="chart-wrap donut-wrap" id="chart-region"></div>
-      <div class="legend" id="legend-region" style="justify-content:center; margin-top:8px;"></div>
-    </div>
-    <div class="card">
-      <div class="card-head">
-        <div>
-          <p class="card-title">Kepemilikan saham</p>
-          <p class="card-subtitle">Bumitama Agri Ltd, per FY2025</p>
-        </div>
-      </div>
-      <div class="chart-wrap donut-wrap" id="chart-ownership"></div>
-      <div class="legend" id="legend-ownership" style="justify-content:center; margin-top:8px;"></div>
-    </div>
+  <p class="section-title">Jelajahi dasbor</p>
+  <section class="nav-card-grid">
+    <a class="nav-card" href="operasional.html"><p class="nav-card-title">Operasional</p><p class="nav-card-desc">TBS, CPO, PK, rendemen, produktivitas per hektare, komposisi kebun</p></a>
+    <a class="nav-card" href="wilayah.html"><p class="nav-card-title">Wilayah</p><p class="nav-card-desc">Kalimantan Tengah, Kalimantan Barat, Riau — kebun, pabrik &amp; tenaga kerja</p></a>
+    <a class="nav-card" href="keuangan.html"><p class="nav-card-title">Keuangan</p><p class="nav-card-desc">Laba rugi, neraca, margin, rasio, arus kas &amp; dividen</p></a>
+    <a class="nav-card" href="keberlanjutan.html"><p class="nav-card-title">Keberlanjutan</p><p class="nav-card-desc">RSPO/ISPO, emisi GHG, keragaman tenaga kerja, keselamatan kerja</p></a>
+    <a class="nav-card" href="kepemimpinan.html"><p class="nav-card-title">Kepemimpinan</p><p class="nav-card-desc">Dewan Komisaris/Direksi, manajemen kunci, milestone &amp; penghargaan</p></a>
+    <a class="nav-card" href="pemegang-saham.html"><p class="nav-card-title">Pemegang Saham</p><p class="nav-card-desc">Struktur kepemilikan, kapitalisasi pasar, statistik saham</p></a>
   </section>
-
-  <section class="card" style="margin-bottom:12px;">
-    <div class="card-head">
-      <div>
-        <p class="card-title">Profil perusahaan</p>
-        <p class="card-subtitle">PT Bumitama Gunajaya Agro (BGA Group)</p>
-      </div>
-    </div>
-    <div class="fact-grid" id="fact-grid"></div>
-  </section>
-
-  <section class="card" style="margin-bottom:12px;">
-    <div class="card-head">
-      <div>
-        <p class="card-title">Direktori pabrik &amp; anak usaha</p>
-        <p class="card-subtitle">Sebagian unit yang teridentifikasi dari dokumen publik (mis. laporan sertifikasi RSPO) — bukan daftar lengkap, tanpa data kinerja per unit</p>
-      </div>
-    </div>
-    <div class="entity-grid" id="entity-grid"></div>
-  </section>
-
-  <footer class="note" id="sources">
-    <p style="margin:0 0 8px; font-weight:600; color:var(--text-secondary);">Sumber data</p>
-    <ul class="source-list" id="source-list"></ul>
-    <p style="margin-top:10px;">Dasbor ini disusun dari dokumen publik Bumitama Agri Ltd dan bukan publikasi resmi BGA Group atau Bumitama Agri Ltd. Untuk keputusan bisnis, rujuk selalu ke laporan resmi perusahaan.</p>
-  </footer>
 
 </div>
+<div id="site-footer"></div>
 
 <script src="js/data.js"></script>
 <script src="js/charts.js"></script>
+<script src="js/nav.js"></script>
 <script src="js/app.js"></script>
+<script>document.getElementById("asof-label").textContent = AS_OF;</script>
 </body>
 </html>

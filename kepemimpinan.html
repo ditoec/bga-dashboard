@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Kepemimpinan — Dasbor BGA Group</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="css/style.css" />
+</head>
+<body data-page="kepemimpinan.html">
+<div id="site-header"></div>
+<div class="app">
+
+  <div class="page-intro">
+    <p class="page-eyebrow">Kepemimpinan</p>
+    <h2>Dewan, manajemen &amp; perjalanan perusahaan</h2>
+    <p>Dewan Komisaris/Direksi dan manajemen kunci per Annual Report 2025, tonggak sejarah sejak 1996, dan penghargaan terkini.</p>
+    <span class="asof" id="asof-label"></span>
+  </div>
+
+  <p class="section-title">Dewan Komisaris &amp; Direksi</p>
+  <p class="section-subtitle">7 anggota — p.16–18, Annual Report 2025</p>
+  <section class="person-grid" id="board-grid"></section>
+
+  <p class="section-title">Manajemen Kunci</p>
+  <p class="section-subtitle">p.19, Annual Report 2025</p>
+  <section class="person-grid" id="management-grid" style="margin-bottom:20px;"></section>
+
+  <section class="grid-2">
+    <div class="card">
+      <div class="card-head"><div><p class="card-title">Milestone perusahaan</p><p class="card-subtitle">1996–2025</p></div></div>
+      <div class="timeline" id="timeline"></div>
+    </div>
+    <div class="card">
+      <div class="card-head"><div><p class="card-title">Penghargaan terpilih</p><p class="card-subtitle">2023–2025</p></div></div>
+      <div class="award-list" id="award-list"></div>
+    </div>
+  </section>
+
+</div>
+<div id="site-footer"></div>
+
+<script src="js/data.js"></script>
+<script src="js/charts.js"></script>
+<script src="js/nav.js"></script>
+<script src="js/app.js"></script>
+<script>document.getElementById("asof-label").textContent = AS_OF;</script>
+</body>
+</html>

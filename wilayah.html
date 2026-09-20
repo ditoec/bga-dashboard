@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Wilayah — Dasbor BGA Group</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="css/style.css" />
+</head>
+<body data-page="wilayah.html">
+<div id="site-header"></div>
+<div class="app">
+
+  <div class="page-intro">
+    <p class="page-eyebrow">Wilayah Operasi</p>
+    <h2>Tiga provinsi, satu jejaring kebun-pabrik</h2>
+    <p>Kalimantan Tengah dan Kalimantan Barat menampung seluruh kebun Grup; Riau kini hanya mengoperasikan satu pabrik yang mengolah TBS pihak ketiga setelah pelepasan lahan pada 2025.</p>
+    <span class="asof" id="asof-label"></span>
+  </div>
+
+  <section class="region-grid" id="region-cards"></section>
+
+  <section class="grid-2" style="margin-top:12px;">
+    <div class="card">
+      <div class="card-head">
+        <div><p class="card-title">Karyawan menurut wilayah</p><p class="card-subtitle">FY2025 · jumlah orang, total 32.628</p></div>
+      </div>
+      <div class="chart-wrap" id="chart-employees-region"></div>
+    </div>
+    <div class="card">
+      <div class="card-head">
+        <div><p class="card-title">Luas tertanam menurut lokasi</p><p class="card-subtitle">2021–2025 · hektare — Riau dilepas pada 2025</p></div>
+        <div class="legend" id="legend-planted-location"></div>
+      </div>
+      <div class="chart-wrap" id="chart-planted-location"></div>
+    </div>
+  </section>
+
+  <p class="section-title">Direktori pabrik &amp; anak usaha</p>
+  <p class="section-subtitle">Sebagian unit yang teridentifikasi dari dokumen publik — bukan daftar lengkap 17 pabrik Grup</p>
+  <section class="entity-grid" id="entity-grid"></section>
+
+</div>
+<div id="site-footer"></div>
+
+<script src="js/data.js"></script>
+<script src="js/charts.js"></script>
+<script src="js/nav.js"></script>
+<script src="js/app.js"></script>
+<script>document.getElementById("asof-label").textContent = AS_OF;</script>
+</body>
+</html>
