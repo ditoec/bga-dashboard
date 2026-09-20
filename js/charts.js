@@ -1,6 +1,6 @@
-// Minimal, dependency-free SVG chart primitives following the dataviz house style:
-// thin marks, hairline recessive gridlines, a single shared hover layer, legend for
-// multi-series charts, direct labels used sparingly.
+// Primitif chart SVG minimal tanpa dependensi, mengikuti kaidah dataviz: garis tipis,
+// gridline tipis yang tidak menonjol, satu lapisan hover, legenda untuk multi-seri,
+// label langsung yang dipakai secukupnya.
 
 const SVGNS = "http://www.w3.org/2000/svg";
 
@@ -30,7 +30,7 @@ function niceAxisMax(max) {
 }
 
 function formatNumber(n, decimals = 0) {
-  return n.toLocaleString("en-US", { maximumFractionDigits: decimals, minimumFractionDigits: decimals });
+  return n.toLocaleString("id-ID", { maximumFractionDigits: decimals, minimumFractionDigits: decimals });
 }
 
 function ensureTooltip(wrap) {
@@ -73,11 +73,11 @@ function legendHtml(items) {
     .join("");
 }
 
-// ---- Line chart (1-2 series, optional area wash on single series) ----
+// ---- Line chart (1-2 seri, area wash opsional pada seri tunggal) ----
 function lineChart(wrap, { categories, series, height = 220, valueFormat = (v) => formatNumber(v) }) {
   wrap.innerHTML = "";
   const width = wrap.clientWidth || 560;
-  const padding = { top: 16, right: 16, bottom: 26, left: 54 };
+  const padding = { top: 16, right: 16, bottom: 26, left: 58 };
   const innerW = width - padding.left - padding.right;
   const innerH = height - padding.top - padding.bottom;
 
@@ -91,7 +91,7 @@ function lineChart(wrap, { categories, series, height = 220, valueFormat = (v) =
 
   const svg = svgEl("svg", { width: "100%", height, viewBox: `0 0 ${width} ${height}`, role: "img" });
 
-  // gridlines + y labels
+  // gridline + label sumbu-y
   const ticks = 4;
   for (let t = 0; t <= ticks; t++) {
     const val = minVal + ((maxVal - minVal) * t) / ticks;
@@ -102,12 +102,11 @@ function lineChart(wrap, { categories, series, height = 220, valueFormat = (v) =
     svg.appendChild(label);
   }
 
-  // baseline
+  // garis dasar
   svg.appendChild(svgEl("line", { class: "axis-line", x1: padding.left, x2: width - padding.right, y1: yScale(0), y2: yScale(0) }));
 
-  // x labels (sparse: first, last, and every ~3rd)
+  // label sumbu-x (jarang: awal, akhir, dan tiap titik)
   categories.forEach((c, i) => {
-    if (i !== 0 && i !== categories.length - 1 && i % 3 !== 0) return;
     const label = svgEl("text", { x: xScale(i), y: height - 6, "text-anchor": i === 0 ? "start" : i === categories.length - 1 ? "end" : "middle" });
     label.textContent = c;
     svg.appendChild(label);
@@ -122,7 +121,7 @@ function lineChart(wrap, { categories, series, height = 220, valueFormat = (v) =
     const linePath = points.map((p, i) => `${i === 0 ? "M" : "L"} ${p[0]},${p[1]}`).join(" ");
     svg.appendChild(svgEl("path", { d: linePath, fill: "none", stroke: s.color, "stroke-width": 2, "stroke-linejoin": "round", "stroke-linecap": "round" }));
 
-    // end marker + direct label
+    // marker akhir + label langsung
     const last = points[points.length - 1];
     svg.appendChild(svgEl("circle", { cx: last[0], cy: last[1], r: 5, fill: cssVar("--surface-1") }));
     svg.appendChild(svgEl("circle", { cx: last[0], cy: last[1], r: 4, fill: s.color }));
@@ -131,7 +130,7 @@ function lineChart(wrap, { categories, series, height = 220, valueFormat = (v) =
     svg.appendChild(endLabel);
   });
 
-  // hover crosshair + shared tooltip
+  // crosshair hover + tooltip bersama
   const crosshair = svgEl("line", { class: "grid-line", x1: 0, x2: 0, y1: padding.top, y2: padding.top + innerH, stroke: cssVar("--text-muted"), opacity: 0 });
   svg.appendChild(crosshair);
 
@@ -185,147 +184,8 @@ function lineChart(wrap, { categories, series, height = 220, valueFormat = (v) =
   return { legend: series.length > 1 ? legendHtml(series.map((s) => ({ name: s.name, color: s.color, shape: "line" }))) : "" };
 }
 
-// ---- Vertical bar chart, optional dashed reference line (e.g. historical average) ----
-function verticalBarChart(wrap, { categories, values, color, reference, referenceName = "Average", height = 220, valueFormat = (v) => formatNumber(v) }) {
-  wrap.innerHTML = "";
-  const width = wrap.clientWidth || 560;
-  const padding = { top: 16, right: 16, bottom: 26, left: 54 };
-  const innerW = width - padding.left - padding.right;
-  const innerH = height - padding.top - padding.bottom;
-
-  const allValues = reference ? values.concat(reference) : values;
-  const maxVal = niceAxisMax(Math.max(...allValues) * 1.15);
-  const yScale = (v) => padding.top + innerH - (v / maxVal) * innerH;
-
-  const band = innerW / categories.length;
-  const barW = Math.min(24, band * 0.55);
-
-  const svg = svgEl("svg", { width: "100%", height, viewBox: `0 0 ${width} ${height}` });
-
-  const ticks = 4;
-  for (let t = 0; t <= ticks; t++) {
-    const val = (maxVal * t) / ticks;
-    const y = yScale(val);
-    svg.appendChild(svgEl("line", { class: "grid-line", x1: padding.left, x2: width - padding.right, y1: y, y2: y }));
-    const label = svgEl("text", { x: padding.left - 8, y: y + 3, "text-anchor": "end" });
-    label.textContent = valueFormat(val);
-    svg.appendChild(label);
-  }
-  svg.appendChild(svgEl("line", { class: "axis-line", x1: padding.left, x2: width - padding.right, y1: yScale(0), y2: yScale(0) }));
-
-  const bars = [];
-  categories.forEach((c, i) => {
-    const cx = padding.left + band * i + band / 2;
-    const v = values[i];
-    const y = yScale(v);
-    const bx = cx - barW / 2;
-    const bh = yScale(0) - y;
-    const rect = svgEl("rect", { x: bx, y, width: barW, height: Math.max(bh, 0), rx: 4, ry: 4, fill: color });
-    svg.appendChild(rect);
-    bars.push({ rect, x: bx, y, w: barW, h: bh, cx, value: v, cat: c });
-
-    if (i === 0 || i === categories.length - 1 || i % 3 === 0) {
-      const label = svgEl("text", { x: cx, y: height - 6, "text-anchor": "middle" });
-      label.textContent = c;
-      svg.appendChild(label);
-    }
-  });
-
-  if (reference) {
-    const points = reference.map((v, i) => [padding.left + band * i + band / 2, yScale(v)]);
-    const path = points.map((p, i) => `${i === 0 ? "M" : "L"} ${p[0]},${p[1]}`).join(" ");
-    svg.appendChild(svgEl("path", { d: path, fill: "none", stroke: cssVar("--text-muted"), "stroke-width": 2, "stroke-dasharray": "3 4", "stroke-linecap": "round" }));
-  }
-
-  wrap.appendChild(svg);
-  const tip = ensureTooltip(wrap);
-
-  bars.forEach((b) => {
-    const hit = svgEl("rect", { x: b.x - 4, y: padding.top, width: b.w + 8, height: innerH, fill: "transparent" });
-    svg.appendChild(hit);
-    hit.addEventListener("pointermove", (evt) => {
-      b.rect.setAttribute("opacity", 0.8);
-      tip.innerHTML = "";
-      const title = document.createElement("div");
-      title.className = "viz-tooltip-title";
-      title.textContent = b.cat;
-      tip.appendChild(title);
-      const row = document.createElement("div");
-      row.className = "viz-tooltip-row";
-      const key = document.createElement("span");
-      key.className = "viz-tooltip-key";
-      key.style.background = color;
-      const name = document.createElement("span");
-      name.className = "viz-tooltip-name";
-      name.textContent = "Actual";
-      const val = document.createElement("span");
-      val.className = "viz-tooltip-val";
-      val.textContent = valueFormat(b.value);
-      row.append(key, name, val);
-      tip.appendChild(row);
-      if (reference) {
-        const idx = categories.indexOf(b.cat);
-        const row2 = document.createElement("div");
-        row2.className = "viz-tooltip-row";
-        const key2 = document.createElement("span");
-        key2.className = "viz-tooltip-key";
-        key2.style.background = cssVar("--text-muted");
-        const name2 = document.createElement("span");
-        name2.className = "viz-tooltip-name";
-        name2.textContent = referenceName;
-        const val2 = document.createElement("span");
-        val2.className = "viz-tooltip-val";
-        val2.textContent = valueFormat(reference[idx]);
-        row2.append(key2, name2, val2);
-        tip.appendChild(row2);
-      }
-      tip.classList.add("show");
-      const rect = wrap.getBoundingClientRect();
-      const scaleX = width / rect.width;
-      positionTooltip(tip, wrap, evt.clientX - rect.left, evt.clientY - rect.top);
-    });
-    hit.addEventListener("pointerleave", () => {
-      b.rect.setAttribute("opacity", 1);
-      tip.classList.remove("show");
-    });
-  });
-}
-
-// ---- Horizontal ranked bar chart (single series) ----
-function horizontalBarChart(wrap, { categories, values, color, unit = "", rowHeight = 28, valueFormat = (v) => formatNumber(v, 1) }) {
-  wrap.innerHTML = "";
-  const width = wrap.clientWidth || 560;
-  const padding = { top: 4, right: 54, bottom: 4, left: 150 };
-  const height = rowHeight * categories.length + padding.top + padding.bottom;
-  const innerW = width - padding.left - padding.right;
-
-  const maxVal = niceAxisMax(Math.max(...values) * 1.1);
-  const xScale = (v) => (v / maxVal) * innerW;
-
-  const svg = svgEl("svg", { width: "100%", height, viewBox: `0 0 ${width} ${height}` });
-
-  categories.forEach((c, i) => {
-    const y = padding.top + i * rowHeight;
-    const barH = 16;
-    const by = y + (rowHeight - barH) / 2;
-    const w = Math.max(xScale(values[i]), 2);
-
-    const label = svgEl("text", { x: padding.left - 10, y: y + rowHeight / 2 + 4, "text-anchor": "end" });
-    label.textContent = c;
-    svg.appendChild(label);
-
-    svg.appendChild(svgEl("rect", { x: padding.left, y: by, width: w, height: barH, rx: 4, ry: 4, fill: color }));
-
-    const valLabel = svgEl("text", { class: "data-label", x: padding.left + w + 8, y: y + rowHeight / 2 + 4, "text-anchor": "start" });
-    valLabel.textContent = valueFormat(values[i]) + unit;
-    svg.appendChild(valLabel);
-  });
-
-  wrap.appendChild(svg);
-}
-
-// ---- Donut chart (2-4 categories) ----
-function donutChart(wrap, { categories, values, colors, centerLabel, centerSub, size = 200, valueFormat = (v) => formatNumber(v) }) {
+// ---- Donut chart (2-4 kategori) ----
+function donutChart(wrap, { categories, values, colors, centerLabel, centerSub, size = 200, unit = "ha", valueFormat = (v) => formatNumber(v) }) {
   wrap.innerHTML = "";
   const total = values.reduce((a, b) => a + b, 0);
   const r = size / 2 - 10;
@@ -335,7 +195,7 @@ function donutChart(wrap, { categories, values, colors, centerLabel, centerSub, 
 
   const svg = svgEl("svg", { width: size, height: size, viewBox: `0 0 ${size} ${size}` });
   let angle = -Math.PI / 2;
-  const gap = 0.018; // radians, surface gap between segments
+  const gap = 0.018; // radian, celah permukaan antar segmen
 
   const arcs = [];
   categories.forEach((c, i) => {
@@ -390,7 +250,10 @@ function donutChart(wrap, { categories, values, colors, centerLabel, centerSub, 
       name.textContent = a.name;
       const val = document.createElement("span");
       val.className = "viz-tooltip-val";
-      val.textContent = valueFormat(a.value) + " ha (" + Math.round((a.value / total) * 100) + "%)";
+      val.textContent =
+        unit === "%"
+          ? valueFormat(a.value) + "%"
+          : valueFormat(a.value) + " " + unit + " (" + Math.round((a.value / total) * 100) + "%)";
       row.append(key, name, val);
       tip.appendChild(row);
       tip.classList.add("show");
@@ -403,10 +266,18 @@ function donutChart(wrap, { categories, values, colors, centerLabel, centerSub, 
     });
   });
 
-  return { legend: legendHtml(categories.map((c, i) => ({ name: `${c} (${formatNumber(values[i])} ha)`, color: colors[i], shape: "rect" }))) };
+  return {
+    legend: legendHtml(
+      categories.map((c, i) => ({
+        name: unit === "%" ? `${c} (${formatNumber(values[i])}%)` : `${c} (${formatNumber(values[i])} ${unit})`,
+        color: colors[i],
+        shape: "rect",
+      }))
+    ),
+  };
 }
 
-// ---- Sparkline for KPI tiles ----
+// ---- Sparkline untuk kartu KPI ----
 function sparkline(svgHost, values, accentColor) {
   const width = 100, height = 28, pad = 3;
   const min = Math.min(...values), max = Math.max(...values);

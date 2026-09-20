@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="id">
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>BGA Group — Plantation Operations Dashboard</title>
+<title>PT Bumitama Gunajaya Agro — Dasbor Operasional</title>
 <link rel="stylesheet" href="css/style.css" />
 </head>
 <body>
@@ -13,21 +13,18 @@
     <div class="brand">
       <div class="brand-mark">BGA</div>
       <div class="brand-text">
-        <h1>Bumitama Gunajaya Agro — Plantation Operations</h1>
-        <p>Management dashboard · estates, mills &amp; production across the group</p>
+        <h1>PT Bumitama Gunajaya Agro — Dasbor Operasional</h1>
+        <p>Ringkasan kinerja Grup BGA, disusun dari keterbukaan publik Bumitama Agri Ltd (SGX: P8Z)</p>
       </div>
     </div>
     <div class="header-right">
       <span class="asof" id="asof-label"></span>
-      <button class="theme-toggle" id="theme-toggle" type="button">Dark mode</button>
+      <button class="theme-toggle" id="theme-toggle" type="button">Mode Gelap</button>
     </div>
   </header>
 
-  <div class="filters">
-    <label for="region-select">Region</label>
-    <select id="region-select"></select>
-    <span class="spacer"></span>
-    <span class="scope-note">Region filter scopes estate, area &amp; yield views below. Group production, price and rainfall trends stay group‑wide.</span>
+  <div class="notice-bar">
+    Angka tingkat Grup diambil dari laporan resmi Bumitama Agri Ltd, induk usaha BGA Group yang tercatat di Bursa Efek Singapura — BGA Group sendiri tidak menerbitkan laporan terpisah. Rincian kinerja per kebun/pabrik bersifat internal dan tidak dipublikasikan, sehingga tidak ditampilkan di sini. Lihat <a href="#sources">sumber data</a> di bagian bawah halaman.
   </div>
 
   <section class="kpi-grid" id="kpi-grid"></section>
@@ -36,22 +33,20 @@
     <div class="card">
       <div class="card-head">
         <div>
-          <p class="card-title">FFB &amp; CPO production</p>
-          <p class="card-subtitle">Group‑wide · thousand metric tons per month</p>
+          <p class="card-title">Tren luas tertanam</p>
+          <p class="card-subtitle">2021–2025 · hektare, akhir tahun</p>
         </div>
-        <div class="legend" id="legend-production"></div>
       </div>
-      <div class="chart-wrap" id="chart-production"></div>
+      <div class="chart-wrap" id="chart-planted"></div>
     </div>
     <div class="card">
       <div class="card-head">
         <div>
-          <p class="card-title">Extraction rates</p>
-          <p class="card-subtitle">Group‑wide · % of FFB processed</p>
+          <p class="card-title">Tren rendemen CPO (OER)</p>
+          <p class="card-subtitle">2023–2025 · % TBS diolah menjadi CPO</p>
         </div>
-        <div class="legend" id="legend-extraction"></div>
       </div>
-      <div class="chart-wrap" id="chart-extraction"></div>
+      <div class="chart-wrap" id="chart-oer"></div>
     </div>
   </section>
 
@@ -59,80 +54,82 @@
     <div class="card">
       <div class="card-head">
         <div>
-          <p class="card-title">CPO reference price</p>
-          <p class="card-subtitle">Group‑wide · USD per metric ton</p>
+          <p class="card-title">Pendapatan &amp; laba bersih</p>
+          <p class="card-subtitle" id="financial-subtitle">Rp triliun</p>
         </div>
+        <div class="legend" id="legend-financial"></div>
       </div>
-      <div class="chart-wrap" id="chart-price"></div>
+      <div class="chart-wrap" id="chart-financial"></div>
     </div>
     <div class="card">
       <div class="card-head">
         <div>
-          <p class="card-title">Rainfall vs. 10‑year average</p>
-          <p class="card-subtitle">Group‑wide · millimetres per month</p>
+          <p class="card-title">Keberlanjutan &amp; tenaga kerja</p>
+          <p class="card-subtitle">Sertifikasi, produksi bersertifikat dan karyawan — FY2025</p>
         </div>
       </div>
-      <div class="chart-wrap" id="chart-rainfall"></div>
+      <div id="sustainability-panel"></div>
     </div>
   </section>
 
-  <section class="grid-2">
+  <section class="grid-3">
     <div class="card">
       <div class="card-head">
         <div>
-          <p class="card-title">FFB yield by estate</p>
-          <p class="card-subtitle" id="yield-subtitle">Metric tons FFB per mature hectare, trailing 12 months</p>
+          <p class="card-title">Inti vs. plasma</p>
+          <p class="card-subtitle">Komposisi luas tertanam 2025</p>
         </div>
       </div>
-      <div class="chart-wrap" id="chart-yield"></div>
+      <div class="chart-wrap donut-wrap" id="chart-nucleus"></div>
+      <div class="legend" id="legend-nucleus" style="justify-content:center; margin-top:8px;"></div>
     </div>
     <div class="card">
       <div class="card-head">
         <div>
-          <p class="card-title">Planted area composition</p>
-          <p class="card-subtitle" id="area-subtitle">Mature vs. immature hectares</p>
+          <p class="card-title">Estimasi sebaran wilayah</p>
+          <p class="card-subtitle">Proporsional dari data 2022</p>
         </div>
-        <div class="legend" id="legend-area"></div>
       </div>
-      <div class="chart-wrap" id="chart-area" style="display:flex; justify-content:center; padding: 6px 0;"></div>
+      <div class="chart-wrap donut-wrap" id="chart-region"></div>
+      <div class="legend" id="legend-region" style="justify-content:center; margin-top:8px;"></div>
+    </div>
+    <div class="card">
+      <div class="card-head">
+        <div>
+          <p class="card-title">Kepemilikan saham</p>
+          <p class="card-subtitle">Bumitama Agri Ltd, per FY2025</p>
+        </div>
+      </div>
+      <div class="chart-wrap donut-wrap" id="chart-ownership"></div>
+      <div class="legend" id="legend-ownership" style="justify-content:center; margin-top:8px;"></div>
     </div>
   </section>
 
   <section class="card" style="margin-bottom:12px;">
     <div class="card-head">
       <div>
-        <p class="card-title">Estate status</p>
-        <p class="card-subtitle" id="estate-status-subtitle">Current operating status by estate</p>
+        <p class="card-title">Profil perusahaan</p>
+        <p class="card-subtitle">PT Bumitama Gunajaya Agro (BGA Group)</p>
       </div>
     </div>
-    <div class="estate-grid" id="estate-cards"></div>
+    <div class="fact-grid" id="fact-grid"></div>
   </section>
 
-  <section class="card table-card">
+  <section class="card" style="margin-bottom:12px;">
     <div class="card-head">
       <div>
-        <p class="card-title">Estate performance detail</p>
-        <p class="card-subtitle" id="table-subtitle">Sorted by FFB yield, highest first</p>
+        <p class="card-title">Direktori pabrik &amp; anak usaha</p>
+        <p class="card-subtitle">Sebagian unit yang teridentifikasi dari dokumen publik (mis. laporan sertifikasi RSPO) — bukan daftar lengkap, tanpa data kinerja per unit</p>
       </div>
     </div>
-    <table class="data-table">
-      <thead>
-        <tr>
-          <th>Estate</th>
-          <th>Region</th>
-          <th>Mature (ha)</th>
-          <th>Immature (ha)</th>
-          <th>Yield (t/ha)</th>
-          <th>OER (%)</th>
-          <th>Mill utilization</th>
-          <th>Status</th>
-        </tr>
-      </thead>
-      <tbody id="estate-table-body"></tbody>
-    </table>
+    <div class="entity-grid" id="entity-grid"></div>
   </section>
 
-  <footer class="note">Figures are illustrative sample data for demonstration. Connect estate &amp; mill reporting feeds to replace js/data.js with live data.</footer>
+  <footer class="note" id="sources">
+    <p style="margin:0 0 8px; font-weight:600; color:var(--text-secondary);">Sumber data</p>
+    <ul class="source-list" id="source-list"></ul>
+    <p style="margin-top:10px;">Dasbor ini disusun dari dokumen publik Bumitama Agri Ltd dan bukan publikasi resmi BGA Group atau Bumitama Agri Ltd. Untuk keputusan bisnis, rujuk selalu ke laporan resmi perusahaan.</p>
+  </footer>
 
 </div>
 

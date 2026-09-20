@@ -1,45 +1,56 @@
-// Wires mock data (js/data.js) into the chart primitives (js/charts.js).
+// Menyusun data publik (js/data.js) ke dalam primitif chart (js/charts.js).
+// Lihat catatan sumber di js/data.js — beberapa angka ditandai estimasi.
 
 const $ = (sel) => document.querySelector(sel);
 
-const state = { region: "All regions" };
-
-function fmtCompact(n, unit = "") {
-  if (Math.abs(n) >= 1000) return (n / 1000).toLocaleString("en-US", { maximumFractionDigits: 1 }) + "K" + unit;
-  return n.toLocaleString("en-US", { maximumFractionDigits: 0 }) + unit;
+function idDecimal(n, decimals = 0) {
+  return n.toLocaleString("id-ID", { minimumFractionDigits: decimals, maximumFractionDigits: decimals });
 }
 
-function deltaEl(curr, prev, { decimals = 1, suffix = "%", positiveIsGood = true } = {}) {
+function seriesColors() {
+  const style = getComputedStyle(document.documentElement);
+  const get = (name) => style.getPropertyValue(name).trim();
+  return {
+    c1: get("--series-1"),
+    c2: get("--series-2"),
+    c3: get("--series-3"),
+    c4: get("--series-4"),
+    c5: get("--series-5"),
+    c6: get("--series-6"),
+  };
+}
+
+function formatByUnit(value, unit) {
+  switch (unit) {
+    case "ha":
+      return idDecimal(value, 0) + " ha";
+    case "juta ton":
+      return idDecimal(value, 2) + " juta ton";
+    case "ribu ton":
+      return idDecimal(Math.round(value), 0) + " ribu ton";
+    case "%":
+      return idDecimal(value, 1) + "%";
+    case "Rp triliun":
+      return "Rp" + idDecimal(value, 2) + " triliun";
+    default:
+      return idDecimal(value) + " " + unit;
+  }
+}
+
+function deltaEl(curr, prev, { decimals = 1, positiveIsGood = true } = {}) {
   const diff = curr - prev;
   const pct = prev !== 0 ? (diff / prev) * 100 : 0;
   const up = diff >= 0;
-  const good = positiveIsGood ? up : !up;
-  const arrow = up ? "↑" : "↓";
   const span = document.createElement("span");
-  span.className = `kpi-delta ${up ? "up" : "down"} ${good ? "good" : "bad"}`;
-  span.textContent = `${arrow} ${Math.abs(pct).toFixed(decimals)}${suffix}`;
+  if (positiveIsGood === null) {
+    span.className = "kpi-delta neutral";
+  } else {
+    const good = positiveIsGood ? up : !up;
+    span.className = `kpi-delta ${up ? "up" : "down"} ${good ? "good" : "bad"}`;
+  }
+  const arrow = up ? "↑" : "↓";
+  span.textContent = `${arrow} ${idDecimal(Math.abs(pct), decimals)}%`;
   return span;
-}
-
-function filteredEstates() {
-  if (state.region === "All regions") return ESTATES;
-  return ESTATES.filter((e) => e.region === state.region);
-}
-
-function weightedYield(estates) {
-  const totalMature = estates.reduce((a, e) => a + e.mature, 0);
-  if (totalMature === 0) return 0;
-  return estates.reduce((a, e) => a + e.yield * e.mature, 0) / totalMature;
-}
-
-function activeMills(estates) {
-  const keys = new Set();
-  let utilSum = 0, utilCount = 0;
-  estates.forEach((e) => {
-    if (e.millCapacity > 0) keys.add(e.mill);
-    if (typeof e.millUtilization === "number") { utilSum += e.millUtilization; utilCount++; }
-  });
-  return { count: keys.size, avgUtilization: utilCount ? utilSum / utilCount : null };
 }
 
 function buildKpiTile({ id, label, value, delta, sub, sparklineValues, accent }) {
@@ -80,254 +91,223 @@ function buildKpiTile({ id, label, value, delta, sub, sparklineValues, accent })
   return tile;
 }
 
+const KPI_DEFS = [
+  { key: "plantedArea", label: "Luas Tertanam", positiveIsGood: null, sparkline: PLANTED_AREA_HA, accentKey: "c1", subBase: "vs. FY2024" },
+  { key: "ffbHarvested", label: "Produksi TBS (Inti & Plasma)", positiveIsGood: true, subBase: "vs. FY2024" },
+  { key: "ffbProcessed", label: "TBS Diolah Pabrik", positiveIsGood: null, subBase: null },
+  { key: "cpoProduction", label: "Produksi CPO", positiveIsGood: true, subBase: "vs. FY2024" },
+  { key: "pkProduction", label: "Produksi Inti Sawit (PK)", positiveIsGood: null, subBase: null },
+  { key: "oer", label: "Rendemen CPO (OER)", positiveIsGood: true, sparkline: OER, accentKey: "c3", subBase: "vs. FY2024" },
+  { key: "revenue", label: "Pendapatan", positiveIsGood: true, sparkline: REVENUE_IDR_T.map((d) => d.value), accentKey: "c2", subBase: "vs. FY2024" },
+  { key: "netProfit", label: "Laba Bersih", positiveIsGood: true, sparkline: NET_PROFIT_IDR_T.map((d) => d.value), accentKey: "c4", subBase: "vs. FY2024" },
+];
+
 function renderKpis() {
   const grid = $("#kpi-grid");
   grid.innerHTML = "";
+  const colors = seriesColors();
 
-  const i = MONTHS.length - 1;
-  const style = getComputedStyle(document.documentElement);
-  const c1 = style.getPropertyValue("--series-1").trim();
-  const c2 = style.getPropertyValue("--series-2").trim();
-  const c3 = style.getPropertyValue("--series-3").trim();
-  const c4 = style.getPropertyValue("--series-4").trim();
-
-  grid.appendChild(buildKpiTile({
-    id: "kpi-ffb", label: "FFB production (this month)",
-    value: fmtCompact(FFB_PRODUCTION[i] * 1000) + " t",
-    delta: deltaEl(FFB_PRODUCTION[i], FFB_PRODUCTION[i - 1]),
-    sub: "Group‑wide · vs. previous month",
-    sparklineValues: FFB_PRODUCTION.slice(-6), accent: c1,
-  }));
-
-  grid.appendChild(buildKpiTile({
-    id: "kpi-cpo", label: "CPO production (this month)",
-    value: fmtCompact(CPO_PRODUCTION[i] * 1000) + " t",
-    delta: deltaEl(CPO_PRODUCTION[i], CPO_PRODUCTION[i - 1]),
-    sub: "Group‑wide · vs. previous month",
-    sparklineValues: CPO_PRODUCTION.slice(-6), accent: c2,
-  }));
-
-  grid.appendChild(buildKpiTile({
-    id: "kpi-oer", label: "Oil extraction rate (OER)",
-    value: OER[i].toFixed(1) + "%",
-    delta: deltaEl(OER[i], OER[i - 1], { decimals: 1 }),
-    sub: "Group‑wide · CPO / FFB processed",
-    sparklineValues: OER.slice(-6), accent: c3,
-  }));
-
-  grid.appendChild(buildKpiTile({
-    id: "kpi-ker", label: "Kernel extraction rate (KER)",
-    value: KER[i].toFixed(1) + "%",
-    delta: deltaEl(KER[i], KER[i - 1], { decimals: 1 }),
-    sub: "Group‑wide · PK / FFB processed",
-    sparklineValues: KER.slice(-6), accent: c4,
-  }));
-
-  grid.appendChild(buildKpiTile({
-    id: "kpi-price", label: "CPO reference price",
-    value: "$" + formatNumber(CPO_PRICE[i]),
-    delta: deltaEl(CPO_PRICE[i], CPO_PRICE[i - 1]),
-    sub: "Group‑wide · USD / metric ton",
-    sparklineValues: CPO_PRICE.slice(-6), accent: c2,
-  }));
-
-  const est = filteredEstates();
-  const mature = est.reduce((a, e) => a + e.mature, 0);
-  const immature = est.reduce((a, e) => a + e.immature, 0);
-  grid.appendChild(buildKpiTile({
-    id: "kpi-area", label: "Planted area",
-    value: fmtCompact(mature + immature) + " ha",
-    sub: `${state.region} · ${formatNumber(mature)} ha mature / ${formatNumber(immature)} ha immature`,
-  }));
-
-  grid.appendChild(buildKpiTile({
-    id: "kpi-yield", label: "FFB yield",
-    value: weightedYield(est).toFixed(1) + " t/ha",
-    sub: `${state.region} · estate‑weighted, trailing 12 months`,
-  }));
-
-  const mills = activeMills(est);
-  grid.appendChild(buildKpiTile({
-    id: "kpi-mills", label: "Active mills",
-    value: String(mills.count),
-    sub: `${state.region} · ${mills.avgUtilization !== null ? mills.avgUtilization.toFixed(0) + "% avg. utilization" : "n/a"}`,
-  }));
-}
-
-function renderGroupCharts() {
-  const style = getComputedStyle(document.documentElement);
-  const c1 = style.getPropertyValue("--series-1").trim();
-  const c2 = style.getPropertyValue("--series-2").trim();
-  const c3 = style.getPropertyValue("--series-3").trim();
-  const c4 = style.getPropertyValue("--series-4").trim();
-
-  const prod = lineChart($("#chart-production"), {
-    categories: MONTHS,
-    series: [
-      { name: "FFB production", color: c1, values: FFB_PRODUCTION },
-      { name: "CPO production", color: c2, values: CPO_PRODUCTION },
-    ],
-    valueFormat: (v) => formatNumber(v, 0) + "K",
-  });
-  $("#legend-production").innerHTML = prod.legend;
-
-  const ext = lineChart($("#chart-extraction"), {
-    categories: MONTHS,
-    series: [
-      { name: "OER", color: c3, values: OER },
-      { name: "KER", color: c4, values: KER },
-    ],
-    valueFormat: (v) => v.toFixed(1) + "%",
-  });
-  $("#legend-extraction").innerHTML = ext.legend;
-
-  lineChart($("#chart-price"), {
-    categories: MONTHS,
-    series: [{ name: "CPO price", color: c2, values: CPO_PRICE }],
-    valueFormat: (v) => "$" + formatNumber(v),
-  });
-
-  verticalBarChart($("#chart-rainfall"), {
-    categories: MONTHS,
-    values: RAINFALL_ACTUAL,
-    reference: RAINFALL_AVERAGE,
-    referenceName: "10‑yr average",
-    color: c1,
-    valueFormat: (v) => formatNumber(v) + "mm",
+  KPI_DEFS.forEach((def) => {
+    const h = HEADLINE[def.key];
+    const valueText = formatByUnit(h.curr, h.unit);
+    const delta = h.prev !== undefined ? deltaEl(h.curr, h.prev, { positiveIsGood: def.positiveIsGood }) : null;
+    const subParts = [];
+    if (h.prev !== undefined && def.subBase) subParts.push(def.subBase);
+    if (h.note) subParts.push(h.note);
+    grid.appendChild(
+      buildKpiTile({
+        id: "kpi-" + def.key,
+        label: def.label,
+        value: valueText,
+        delta,
+        sub: subParts.join(" · ") || null,
+        sparklineValues: def.sparkline,
+        accent: def.accentKey ? colors[def.accentKey] : undefined,
+      })
+    );
   });
 }
 
-function renderRegionCharts() {
-  const style = getComputedStyle(document.documentElement);
-  const c1 = style.getPropertyValue("--series-1").trim();
-  const c3 = style.getPropertyValue("--series-3").trim();
-  const est = filteredEstates().slice().sort((a, b) => b.yield - a.yield);
+function renderTrendCharts() {
+  const { c1, c2, c3, c4 } = seriesColors();
 
-  horizontalBarChart($("#chart-yield"), {
-    categories: est.map((e) => e.name),
-    values: est.map((e) => e.yield),
-    color: c1,
-    unit: " t/ha",
+  lineChart($("#chart-planted"), {
+    categories: PLANTED_YEARS,
+    series: [{ name: "Luas tertanam", color: c1, values: PLANTED_AREA_HA }],
+    valueFormat: (v) => idDecimal(v, 0),
   });
 
-  const mature = est.reduce((a, e) => a + e.mature, 0);
-  const immature = est.reduce((a, e) => a + e.immature, 0);
-  const donut = donutChart($("#chart-area"), {
-    categories: ["Mature", "Immature"],
-    values: [mature, immature],
+  lineChart($("#chart-oer"), {
+    categories: OER_YEARS,
+    series: [{ name: "OER", color: c3, values: OER }],
+    valueFormat: (v) => idDecimal(v, 1) + "%",
+  });
+
+  const fin = lineChart($("#chart-financial"), {
+    categories: FINANCIAL_YEARS,
+    series: [
+      { name: "Pendapatan", color: c2, values: REVENUE_IDR_T.map((d) => d.value) },
+      { name: "Laba bersih", color: c4, values: NET_PROFIT_IDR_T.map((d) => d.value) },
+    ],
+    valueFormat: (v) => "Rp" + idDecimal(v, 1) + "T",
+  });
+  $("#legend-financial").innerHTML = fin.legend;
+  $("#financial-subtitle").textContent =
+    "Rp triliun · titik 2022 dan 2024 diestimasi dari persentase perubahan YoY resmi (lihat sumber)";
+}
+
+function renderCompositionDonuts() {
+  const { c1, c2, c3, c5, c6 } = seriesColors();
+
+  const nucleus = donutChart($("#chart-nucleus"), {
+    categories: ["Inti (nucleus)", "Plasma"],
+    values: [NUCLEUS_HA_2025, PLASMA_HA_2025],
     colors: [c1, c3],
-    centerLabel: fmtCompact(mature + immature),
-    centerSub: "hectares",
+    centerLabel: idDecimal(NUCLEUS_HA_2025 + PLASMA_HA_2025, 0),
+    centerSub: "ha tertanam",
+    unit: "ha",
   });
-  $("#legend-area").innerHTML = donut.legend;
+  $("#legend-nucleus").innerHTML = nucleus.legend;
 
-  $("#yield-subtitle").textContent = `${state.region} · metric tons FFB per mature hectare, trailing 12 months`;
-  $("#area-subtitle").textContent = `${state.region} · mature vs. immature hectares`;
+  const regionSum = REGION_SHARE_BASE_2022.reduce((a, r) => a + r.ha2022, 0);
+  const totalPlanted2025 = PLANTED_AREA_HA[PLANTED_AREA_HA.length - 1];
+  const regionValues = REGION_SHARE_BASE_2022.map((r) => Math.round(totalPlanted2025 * (r.ha2022 / regionSum)));
+  const region = donutChart($("#chart-region"), {
+    categories: REGION_SHARE_BASE_2022.map((r) => r.region),
+    values: regionValues,
+    colors: [c1, c3, c6],
+    centerLabel: idDecimal(totalPlanted2025, 0),
+    centerSub: "ha (estimasi)",
+    unit: "ha",
+  });
+  $("#legend-region").innerHTML = region.legend;
+
+  const ownership = donutChart($("#chart-ownership"), {
+    categories: OWNERSHIP.map((o) => o.name),
+    values: OWNERSHIP.map((o) => o.pct),
+    colors: [c1, c3, c5],
+    centerLabel: "100%",
+    centerSub: "kepemilikan",
+    unit: "%",
+  });
+  $("#legend-ownership").innerHTML = ownership.legend;
 }
 
-function statusPillHtml(status) {
-  const meta = STATUS_META[status];
-  const span = document.createElement("span");
-  span.className = "pill";
-  const dot = document.createElement("span");
-  dot.className = "status-dot";
-  dot.style.background = meta.dot;
-  const label = document.createElement("span");
-  label.className = `status-label ${status}`;
-  label.textContent = meta.label;
-  span.append(dot, label);
-  return span;
+function renderSustainabilityPanel() {
+  const panel = $("#sustainability-panel");
+  panel.innerHTML = "";
+
+  const rspoPct = Math.round((SUSTAINABILITY.rspoMillsCertified / COMPANY.mills) * 100);
+  const meterBlock = document.createElement("div");
+  meterBlock.className = "meter-block";
+  meterBlock.innerHTML = `
+    <div class="meter-label-row">
+      <span class="meter-label">Sertifikasi RSPO (pabrik)</span>
+      <span class="meter-value">${SUSTAINABILITY.rspoMillsCertified} dari ${COMPANY.mills} pabrik (${rspoPct}%)</span>
+    </div>
+    <div class="meter-track"><div class="meter-fill" style="width:${rspoPct}%"></div></div>
+    <p class="meter-note">Target: 100% kebun &amp; pabrik tersertifikasi RSPO pada ${SUSTAINABILITY.rspoTargetYear}</p>
+  `;
+  panel.appendChild(meterBlock);
+
+  const statRow = document.createElement("div");
+  statRow.className = "stat-row";
+  const stats = [
+    { value: String(SUSTAINABILITY.ispoCertifications), label: `Sertifikasi ISPO · target 100% (${SUSTAINABILITY.ispoTargetYear})` },
+    { value: idDecimal(SUSTAINABILITY.cspoCspkTonnes2025, 0) + " ton", label: "CSPO + CSPK bersertifikat, diproduksi 2025" },
+    { value: ">" + idDecimal(COMPANY.employees, 0), label: "Karyawan Grup BGA" },
+  ];
+  stats.forEach((s) => {
+    const item = document.createElement("div");
+    item.className = "stat-row-item";
+    const val = document.createElement("div");
+    val.className = "stat-value";
+    val.textContent = s.value;
+    const lab = document.createElement("div");
+    lab.className = "stat-label";
+    lab.textContent = s.label;
+    item.append(val, lab);
+    statRow.appendChild(item);
+  });
+  panel.appendChild(statRow);
+
+  const conservation = document.createElement("p");
+  conservation.className = "meter-note";
+  conservation.style.marginTop = "12px";
+  conservation.textContent = `Area konservasi: ${SUSTAINABILITY.conservation.hcv}% HCV · ${SUSTAINABILITY.conservation.hcs}% HCS · ${SUSTAINABILITY.conservation.peat}% gambut · ${SUSTAINABILITY.conservation.other}% lainnya`;
+  panel.appendChild(conservation);
 }
 
-function renderEstateCards() {
-  const container = $("#estate-cards");
-  container.innerHTML = "";
-  const est = filteredEstates().slice().sort((a, b) => b.yield - a.yield);
-  est.forEach((e) => {
+function renderFactGrid() {
+  const grid = $("#fact-grid");
+  grid.innerHTML = "";
+  const facts = [
+    { label: "Didirikan", value: `${COMPANY.founded}, oleh ${COMPANY.founder}` },
+    { label: "Tercatat di bursa", value: `Singapore Exchange, kode P8Z, sejak ${COMPANY.listedSince}` },
+    { label: "Grup usaha", value: `${COMPANY.groupName}, anak usaha operasional dari ${COMPANY.parentListed}` },
+    { label: "Kantor operasional", value: COMPANY.hqOperational },
+    { label: "Kantor terdaftar", value: COMPANY.hqRegistered },
+    { label: "Provinsi operasi", value: COMPANY.provinces.join(", ") },
+    { label: "Jumlah pabrik", value: `${COMPANY.mills} pabrik kelapa sawit` },
+    { label: "Kapasitas olah TBS", value: `±${idDecimal(COMPANY.millCapacityTonPerYear / 1000000, 0)} juta ton/tahun` },
+    { label: "Karyawan", value: `>${idDecimal(COMPANY.employees, 0)} orang` },
+  ];
+  facts.forEach((f) => {
+    const item = document.createElement("div");
+    item.className = "fact-item";
+    const lab = document.createElement("p");
+    lab.className = "fact-label";
+    lab.textContent = f.label;
+    const val = document.createElement("p");
+    val.className = "fact-value";
+    val.textContent = f.value;
+    item.append(lab, val);
+    grid.appendChild(item);
+  });
+}
+
+function renderEntityGrid() {
+  const grid = $("#entity-grid");
+  grid.innerHTML = "";
+  MILL_DIRECTORY.forEach((e) => {
     const card = document.createElement("div");
-    card.className = "estate-card";
-
-    const top = document.createElement("div");
-    top.className = "estate-card-top";
-    const dot = document.createElement("span");
-    dot.className = "status-dot";
-    dot.style.background = STATUS_META[e.status].dot;
-    const name = document.createElement("span");
-    name.className = "estate-name";
-    name.textContent = e.name;
-    top.append(dot, name);
-
-    const region = document.createElement("p");
-    region.className = "estate-region";
-    region.textContent = e.region;
-
-    const stats = document.createElement("div");
-    stats.className = "estate-stats";
-    stats.innerHTML = `<span>Yield <b>${e.yield.toFixed(1)}</b> t/ha</span>`;
-    const oer = document.createElement("span");
-    oer.innerHTML = `OER <b>${e.oer.toFixed(1)}</b>%`;
-    stats.appendChild(oer);
-
-    card.append(top, region, stats);
-    container.appendChild(card);
+    card.className = "entity-card";
+    const pt = document.createElement("p");
+    pt.className = "entity-pt";
+    pt.textContent = e.pt;
+    const unit = document.createElement("p");
+    unit.className = "entity-unit";
+    unit.textContent = e.unit;
+    const loc = document.createElement("p");
+    loc.className = "entity-location";
+    loc.textContent = e.location;
+    card.append(pt, unit, loc);
+    grid.appendChild(card);
   });
-  $("#estate-status-subtitle").textContent = `${state.region} · current operating status by estate`;
 }
 
-function renderTable() {
-  const tbody = $("#estate-table-body");
-  tbody.innerHTML = "";
-  const est = filteredEstates().slice().sort((a, b) => b.yield - a.yield);
-  est.forEach((e) => {
-    const tr = document.createElement("tr");
-
-    const tdName = document.createElement("td");
-    tdName.textContent = e.name;
-    const tdRegion = document.createElement("td");
-    tdRegion.textContent = e.region;
-    const tdMature = document.createElement("td");
-    tdMature.textContent = formatNumber(e.mature);
-    const tdImmature = document.createElement("td");
-    tdImmature.textContent = formatNumber(e.immature);
-    const tdYield = document.createElement("td");
-    tdYield.textContent = e.yield.toFixed(1);
-    const tdOer = document.createElement("td");
-    tdOer.textContent = e.oer.toFixed(1);
-    const tdUtil = document.createElement("td");
-    tdUtil.textContent = typeof e.millUtilization === "number" ? e.millUtilization + "%" : "—";
-    const tdStatus = document.createElement("td");
-    tdStatus.appendChild(statusPillHtml(e.status));
-
-    tr.append(tdName, tdRegion, tdMature, tdImmature, tdYield, tdOer, tdUtil, tdStatus);
-    tbody.appendChild(tr);
+function renderSources() {
+  const list = $("#source-list");
+  list.innerHTML = "";
+  SOURCES.forEach((s) => {
+    const li = document.createElement("li");
+    const a = document.createElement("a");
+    a.href = s.url;
+    a.target = "_blank";
+    a.rel = "noopener noreferrer";
+    a.textContent = s.label;
+    li.appendChild(a);
+    list.appendChild(li);
   });
-  $("#table-subtitle").textContent = `${state.region} · sorted by FFB yield, highest first`;
 }
 
 function renderAll() {
   renderKpis();
-  renderGroupCharts();
-  renderRegionCharts();
-  renderEstateCards();
-  renderTable();
-}
-
-function initFilters() {
-  const select = $("#region-select");
-  REGIONS.forEach((r) => {
-    const opt = document.createElement("option");
-    opt.value = r;
-    opt.textContent = r;
-    select.appendChild(opt);
-  });
-  select.value = state.region;
-  select.addEventListener("change", () => {
-    state.region = select.value;
-    renderKpis();
-    renderRegionCharts();
-    renderEstateCards();
-    renderTable();
-  });
+  renderTrendCharts();
+  renderCompositionDonuts();
+  renderSustainabilityPanel();
+  renderFactGrid();
+  renderEntityGrid();
 }
 
 function initTheme() {
@@ -351,18 +331,17 @@ function updateThemeLabel() {
   const btn = $("#theme-toggle");
   const current = document.documentElement.getAttribute("data-theme") ||
     (window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light");
-  btn.textContent = current === "dark" ? "Light mode" : "Dark mode";
+  btn.textContent = current === "dark" ? "Mode Terang" : "Mode Gelap";
 }
 
 function initAsOf() {
-  const last = MONTHS[MONTHS.length - 1];
-  $("#asof-label").textContent = `Data as of ${last}`;
+  $("#asof-label").textContent = AS_OF;
 }
 
 window.addEventListener("DOMContentLoaded", () => {
-  initFilters();
   initTheme();
   initAsOf();
+  renderSources();
   renderAll();
 });
 
