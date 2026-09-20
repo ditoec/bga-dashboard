@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>BGA Group — Plantation Operations Dashboard</title>
+<link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+<div class="app">
+
+  <header class="header">
+    <div class="brand">
+      <div class="brand-mark">BGA</div>
+      <div class="brand-text">
+        <h1>Bumitama Gunajaya Agro — Plantation Operations</h1>
+        <p>Management dashboard · estates, mills &amp; production across the group</p>
+      </div>
+    </div>
+    <div class="header-right">
+      <span class="asof" id="asof-label"></span>
+      <button class="theme-toggle" id="theme-toggle" type="button">Dark mode</button>
+    </div>
+  </header>
+
+  <div class="filters">
+    <label for="region-select">Region</label>
+    <select id="region-select"></select>
+    <span class="spacer"></span>
+    <span class="scope-note">Region filter scopes estate, area &amp; yield views below. Group production, price and rainfall trends stay group‑wide.</span>
+  </div>
+
+  <section class="kpi-grid" id="kpi-grid"></section>
+
+  <section class="grid-2">
+    <div class="card">
+      <div class="card-head">
+        <div>
+          <p class="card-title">FFB &amp; CPO production</p>
+          <p class="card-subtitle">Group‑wide · thousand metric tons per month</p>
+        </div>
+        <div class="legend" id="legend-production"></div>
+      </div>
+      <div class="chart-wrap" id="chart-production"></div>
+    </div>
+    <div class="card">
+      <div class="card-head">
+        <div>
+          <p class="card-title">Extraction rates</p>
+          <p class="card-subtitle">Group‑wide · % of FFB processed</p>
+        </div>
+        <div class="legend" id="legend-extraction"></div>
+      </div>
+      <div class="chart-wrap" id="chart-extraction"></div>
+    </div>
+  </section>
+
+  <section class="grid-2">
+    <div class="card">
+      <div class="card-head">
+        <div>
+          <p class="card-title">CPO reference price</p>
+          <p class="card-subtitle">Group‑wide · USD per metric ton</p>
+        </div>
+      </div>
+      <div class="chart-wrap" id="chart-price"></div>
+    </div>
+    <div class="card">
+      <div class="card-head">
+        <div>
+          <p class="card-title">Rainfall vs. 10‑year average</p>
+          <p class="card-subtitle">Group‑wide · millimetres per month</p>
+        </div>
+      </div>
+      <div class="chart-wrap" id="chart-rainfall"></div>
+    </div>
+  </section>
+
+  <section class="grid-2">
+    <div class="card">
+      <div class="card-head">
+        <div>
+          <p class="card-title">FFB yield by estate</p>
+          <p class="card-subtitle" id="yield-subtitle">Metric tons FFB per mature hectare, trailing 12 months</p>
+        </div>
+      </div>
+      <div class="chart-wrap" id="chart-yield"></div>
+    </div>
+    <div class="card">
+      <div class="card-head">
+        <div>
+          <p class="card-title">Planted area composition</p>
+          <p class="card-subtitle" id="area-subtitle">Mature vs. immature hectares</p>
+        </div>
+        <div class="legend" id="legend-area"></div>
+      </div>
+      <div class="chart-wrap" id="chart-area" style="display:flex; justify-content:center; padding: 6px 0;"></div>
+    </div>
+  </section>
+
+  <section class="card" style="margin-bottom:12px;">
+    <div class="card-head">
+      <div>
+        <p class="card-title">Estate status</p>
+        <p class="card-subtitle" id="estate-status-subtitle">Current operating status by estate</p>
+      </div>
+    </div>
+    <div class="estate-grid" id="estate-cards"></div>
+  </section>
+
+  <section class="card table-card">
+    <div class="card-head">
+      <div>
+        <p class="card-title">Estate performance detail</p>
+        <p class="card-subtitle" id="table-subtitle">Sorted by FFB yield, highest first</p>
+      </div>
+    </div>
+    <table class="data-table">
+      <thead>
+        <tr>
+          <th>Estate</th>
+          <th>Region</th>
+          <th>Mature (ha)</th>
+          <th>Immature (ha)</th>
+          <th>Yield (t/ha)</th>
+          <th>OER (%)</th>
+          <th>Mill utilization</th>
+          <th>Status</th>
+        </tr>
+      </thead>
+      <tbody id="estate-table-body"></tbody>
+    </table>
+  </section>
+
+  <footer class="note">Figures are illustrative sample data for demonstration. Connect estate &amp; mill reporting feeds to replace js/data.js with live data.</footer>
+
+</div>
+
+<script src="js/data.js"></script>
+<script src="js/charts.js"></script>
+<script src="js/app.js"></script>
+</body>
+</html>
