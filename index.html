@@ -1,71 +1,215 @@
 <!DOCTYPE html>
-<html lang="id">
+<html lang="en">
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Ringkasan — Dasbor BGA Group</title>
+<title>Bumitama Gunajaya Agro — Excellence Through Discipline</title>
+<meta name="description" content="PT Bumitama Gunajaya Agro (BGA Group) — sustainable palm oil cultivation and milling across Central Kalimantan, West Kalimantan and Riau." />
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&display=swap" rel="stylesheet" />
-<link rel="stylesheet" href="css/style.css" />
+<link rel="stylesheet" href="css/site.css" />
 </head>
-<body data-page="index.html">
-<div id="site-header"></div>
-<div class="app">
+<body>
 
-  <div class="page-intro">
-    <p class="page-eyebrow">Ringkasan Grup</p>
-    <h2>Kinerja BGA Group, FY2025</h2>
-    <p>Titik masuk dasbor manajemen — capaian tahun berjalan dibandingkan FY2024, disusun dari Bumitama Agri Ltd. Annual Report 2025.</p>
-    <span class="asof" id="asof-label"></span>
+<nav class="site-nav">
+  <div class="container">
+    <a class="nav-brand" href="#top">
+      <span class="nav-mark">BGA</span>
+      <span class="nav-brand-text">Bumitama Gunajaya Agro</span>
+    </a>
+    <div class="nav-links">
+      <a href="#about">About</a>
+      <a href="#operations">Operations</a>
+      <a href="#performance">Performance</a>
+      <a href="#sustainability">Sustainability</a>
+      <a href="#leadership">Leadership</a>
+      <a href="#milestones">Milestones</a>
+    </div>
+    <a class="nav-cta" href="https://ditoec.github.io/bga-dashboard/" target="_blank" rel="noopener">Management Dashboard →</a>
   </div>
+</nav>
 
-  <section class="kpi-grid" id="kpi-grid-ringkasan"></section>
-
-  <section class="grid-2">
-    <div class="card">
-      <div class="card-head">
-        <div>
-          <p class="card-title">Pendapatan &amp; EBITDA</p>
-          <p class="card-subtitle">2021–2025 · Rp triliun</p>
-        </div>
-        <div class="legend" id="legend-ringkasan-financial"></div>
-      </div>
-      <div class="chart-wrap" id="chart-ringkasan-financial"></div>
+<header class="hero" id="top">
+  <canvas id="hero-canvas"></canvas>
+  <div class="hero-content">
+    <span class="eyebrow">PT Bumitama Gunajaya Agro &middot; est. 1996</span>
+    <h1>Cultivating palm oil with <em>discipline</em>, at scale.</h1>
+    <p class="lede">BGA Group grows, harvests and mills Fresh Fruit Bunches across Central Kalimantan, West Kalimantan and Riau — one of Indonesia's most established upstream palm oil producers, listed in Singapore as Bumitama Agri Ltd. (SGX: P8Z).</p>
+    <div class="hero-actions">
+      <a class="btn btn-primary" href="#operations">Explore our operations</a>
+      <a class="btn btn-ghost" href="#performance">FY2025 performance</a>
     </div>
-    <div class="card">
-      <div class="card-head">
-        <div>
-          <p class="card-title">TBS Internal &amp; Produksi CPO</p>
-          <p class="card-subtitle">2021–2025 · ribu metrik ton</p>
-        </div>
-        <div class="legend" id="legend-ringkasan-produksi"></div>
-      </div>
-      <div class="chart-wrap" id="chart-ringkasan-produksi"></div>
+    <div class="hero-stats" id="hero-stats"></div>
+  </div>
+  <div class="scroll-cue"></div>
+</header>
+
+<section id="about">
+  <div class="container about-grid">
+    <div class="about-copy reveal">
+      <span class="eyebrow">About the Group</span>
+      <h2 style="font-family: var(--font-display); font-size: clamp(1.8rem, 3vw, 2.4rem); margin: 16px 0 22px; font-weight: 600;">Three decades in the field, one operating philosophy.</h2>
+      <p>Since acquiring its first concession in Central Kalimantan in 1996, BGA Group has grown into a vertically-focused upstream palm oil producer — cultivating, harvesting and milling exclusively, without moving into refining or consumer products. That focus has shaped a culture built entirely around agronomic discipline and capital stewardship.</p>
+      <p>The Group's estates sit within agronomically favoured landscapes with balanced rainfall and a mature age profile, positioning them well within their peak productive years. Nucleus estates work alongside plasma smallholder partnerships that exceed government-mandated thresholds, weaving local communities into a long-term, shared value chain.</p>
+      <p class="about-quote">"Excellence Through Discipline."</p>
+      <p style="font-size: 12.5px; color: var(--text-muted); margin-top: -8px;">— the Group's guiding motto, referenced throughout its public disclosures.</p>
     </div>
-  </section>
+    <div class="fact-list reveal-stagger">
+      <div class="fact-list-item"><div class="fv">1996</div><div class="fl">Founded, Central Kalimantan</div></div>
+      <div class="fact-list-item"><div class="fv">2012</div><div class="fl">Listed on SGX as Bumitama Agri Ltd. (P8Z)</div></div>
+      <div class="fact-list-item"><div class="fv">Jakarta</div><div class="fl">Operational headquarters</div></div>
+      <div class="fact-list-item"><div class="fv">3</div><div class="fl">Provinces of operation</div></div>
+    </div>
+  </div>
+</section>
 
-  <p class="section-title">Wilayah operasi</p>
-  <p class="section-subtitle">Tiga provinsi — lihat halaman Wilayah untuk rincian lengkap</p>
-  <section class="region-grid" id="ringkasan-region-cards"></section>
+<section id="operations" class="section-alt">
+  <div class="container">
+    <div class="section-head reveal">
+      <span class="eyebrow">Operations</span>
+      <h2>From nucleus estate to export-ready product.</h2>
+      <p>BGA Group's mills sit close to its own plantations and to independent smallholder suppliers, turning Fresh Fruit Bunches into Crude Palm Oil and Palm Kernel with a combined processing capacity of roughly 1,165 tonnes per hour.</p>
+    </div>
+    <div class="region-grid3" id="region-cards"></div>
+    <div class="process-flow reveal-stagger">
+      <div class="process-step">
+        <div class="process-icon">🌴</div>
+        <h4>Nucleus &amp; plasma estates</h4>
+        <p>Cultivation across three provinces</p>
+      </div>
+      <div class="process-arrow">→</div>
+      <div class="process-step">
+        <div class="process-icon">🧺</div>
+        <h4>FFB harvest</h4>
+        <p>Fresh Fruit Bunches, hand-graded</p>
+      </div>
+      <div class="process-arrow">→</div>
+      <div class="process-step">
+        <div class="process-icon">🏭</div>
+        <h4>Milling</h4>
+        <p>17 mills, ~1,165 tph capacity</p>
+      </div>
+      <div class="process-arrow">→</div>
+      <div class="process-step">
+        <div class="process-icon">🛢️</div>
+        <h4>CPO &amp; PK</h4>
+        <p>Delivered to domestic refineries</p>
+      </div>
+    </div>
+  </div>
+</section>
 
-  <p class="section-title">Jelajahi dasbor</p>
-  <section class="nav-card-grid">
-    <a class="nav-card" href="operasional.html"><p class="nav-card-title">Operasional</p><p class="nav-card-desc">TBS, CPO, PK, rendemen, produktivitas per hektare, komposisi kebun</p></a>
-    <a class="nav-card" href="wilayah.html"><p class="nav-card-title">Wilayah</p><p class="nav-card-desc">Kalimantan Tengah, Kalimantan Barat, Riau — kebun, pabrik &amp; tenaga kerja</p></a>
-    <a class="nav-card" href="keuangan.html"><p class="nav-card-title">Keuangan</p><p class="nav-card-desc">Laba rugi, neraca, margin, rasio, arus kas &amp; dividen</p></a>
-    <a class="nav-card" href="keberlanjutan.html"><p class="nav-card-title">Keberlanjutan</p><p class="nav-card-desc">RSPO/ISPO, emisi GHG, keragaman tenaga kerja, keselamatan kerja</p></a>
-    <a class="nav-card" href="kepemimpinan.html"><p class="nav-card-title">Kepemimpinan</p><p class="nav-card-desc">Dewan Komisaris/Direksi, manajemen kunci, milestone &amp; penghargaan</p></a>
-    <a class="nav-card" href="pemegang-saham.html"><p class="nav-card-title">Pemegang Saham</p><p class="nav-card-desc">Struktur kepemilikan, kapitalisasi pasar, statistik saham</p></a>
-  </section>
+<section id="performance">
+  <div class="container">
+    <div class="section-head reveal">
+      <span class="eyebrow">FY2025 Performance</span>
+      <h2>A five-year run of disciplined growth.</h2>
+      <p>Figures below are drawn from the Bumitama Agri Ltd. Annual Report 2025 — the Group's listed parent on the Singapore Exchange.</p>
+    </div>
+    <div class="stat-grid4" id="perf-stats"></div>
+    <div class="perf-chart-card reveal">
+      <div class="chart-wrap" id="perf-chart"></div>
+      <div class="chart-legend" id="perf-chart-legend"></div>
+    </div>
+  </div>
+</section>
 
-</div>
-<div id="site-footer"></div>
+<section id="sustainability" class="section-alt">
+  <div class="container">
+    <div class="section-head reveal">
+      <span class="eyebrow">Sustainability</span>
+      <h2>Growth measured against the land it depends on.</h2>
+      <p>Certification, emissions and community programmes sit alongside production metrics as core operating disciplines, not side initiatives.</p>
+    </div>
+    <div class="sustain-grid" id="sustain-cards"></div>
+  </div>
+</section>
+
+<section id="leadership">
+  <div class="container">
+    <div class="section-head reveal">
+      <span class="eyebrow">Leadership</span>
+      <h2>The Board and management steering the Group.</h2>
+      <p>Hover or focus a card to see each leader's role and tenure.</p>
+    </div>
+    <div class="leader-grid" id="leader-grid"></div>
+  </div>
+</section>
+
+<section id="milestones" class="section-alt">
+  <div class="container">
+    <div class="section-head reveal">
+      <span class="eyebrow">Milestones</span>
+      <h2>Three decades, one steady trajectory.</h2>
+      <p>Scroll horizontally to trace the Group's path from its first concession to its most recent dividend record.</p>
+    </div>
+  </div>
+  <div class="container">
+    <div class="timeline-scroller" id="milestone-scroller"></div>
+  </div>
+</section>
+
+<section id="awards">
+  <div class="container">
+    <div class="section-head reveal">
+      <span class="eyebrow">Recognition</span>
+      <h2>Recent awards &amp; accolades.</h2>
+    </div>
+    <div class="award-grid" id="award-grid"></div>
+  </div>
+</section>
+
+<section>
+  <div class="container">
+    <div class="cta-band reveal">
+      <h2>Looking for the full operating picture?</h2>
+      <p>The management dashboard breaks every number here down further — by province, by quarter, and against five years of audited history.</p>
+      <a class="btn btn-primary" href="https://ditoec.github.io/bga-dashboard/" target="_blank" rel="noopener">Open the management dashboard →</a>
+    </div>
+  </div>
+</section>
+
+<footer class="site-footer">
+  <div class="container">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <a class="nav-brand" href="#top">
+          <span class="nav-mark">BGA</span>
+          <span class="nav-brand-text">Bumitama Gunajaya Agro</span>
+        </a>
+        <p>An independent, fan-made showcase site built from Bumitama Agri Ltd.'s public Annual Report 2025 — not an official publication of BGA Group or Bumitama Agri Ltd.</p>
+      </div>
+      <div class="footer-col">
+        <h5>Site</h5>
+        <a href="#about">About</a>
+        <a href="#operations">Operations</a>
+        <a href="#performance">Performance</a>
+        <a href="#sustainability">Sustainability</a>
+      </div>
+      <div class="footer-col">
+        <h5>More</h5>
+        <a href="#leadership">Leadership</a>
+        <a href="#milestones">Milestones</a>
+        <a href="#awards">Recognition</a>
+        <a href="https://ditoec.github.io/bga-dashboard/" target="_blank" rel="noopener">Management dashboard</a>
+      </div>
+      <div class="footer-col">
+        <h5>Registered office</h5>
+        <p>10 Anson Road, #11-19<br />International Plaza<br />Singapore 079903</p>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>Data source: Bumitama Agri Ltd. Annual Report 2025 (SGX: P8Z).</span>
+      <span>Not affiliated with or endorsed by Bumitama Agri Ltd.</span>
+    </div>
+  </div>
+</footer>
 
 <script src="js/data.js"></script>
+<script src="js/site-content.js"></script>
 <script src="js/charts.js"></script>
-<script src="js/nav.js"></script>
-<script src="js/app.js"></script>
-<script>document.getElementById("asof-label").textContent = AS_OF;</script>
+<script src="js/site.js"></script>
+<script type="module" src="js/site-hero3d.js"></script>
 </body>
 </html>
