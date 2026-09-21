@@ -147,16 +147,24 @@ function fillPerformance() {
   $("#perf-chart-legend").innerHTML = chart.legend;
 }
 
+const SUSTAIN_ICONS = {
+  shield: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l7 3v6c0 4.5-3 7.5-7 9-4-1.5-7-4.5-7-9V6l7-3Z"/><path d="M9 12l2 2 4-4"/></svg>',
+  leaf: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M20 4C10 4 4 10 4 18c0 .5 0 1 .06 1.5"/><path d="M20 4c0 10-6 16-14 16-1.5 0-2.5-.1-2.5-.1"/><path d="M8 16c3-3 6-6 12-12"/></svg>',
+  handshake: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M2 11l5-4 4 3h3l4-3 4 4"/><path d="M6 12l4 4c1 1 2 1 3 0"/><path d="M10 13l3 3c1 1 2 1 3 0"/><path d="M14 12l3 3"/><path d="M2 11v4l4 4"/><path d="M22 11v4l-4 4"/></svg>',
+  people: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="8" r="3"/><path d="M3 20c0-3.3 2.7-6 6-6s6 2.7 6 6"/><circle cx="17" cy="9" r="2.4"/><path d="M15.5 14.2c2.5.4 4.5 2.5 4.5 5.3"/></svg>',
+};
+
 function fillSustainability() {
   const i = 4;
   const cards = [
-    { big: `${RSPO_MILLS_CERTIFIED[i]}/${COMPANY.mills}`, title: "RSPO-certified mills", text: `${en(RSPO_CERTIFIED_HA[i])} ha certified (${RSPO_HGU_COVERAGE_PCT_2025}% of landbank) &middot; full certification targeted for ${RSPO_TARGET_YEAR}.` },
-    { big: `${GHG.netEmissions2025MtCo2e.toFixed(2)}M`, title: "Net tCO2e, FY2025", text: `Emission intensity down ${GHG.intensityReductionVs2016Pct}% vs. the 2016 baseline &middot; ${GHG.methaneCaptureFacilities} methane-capture facilities online.` },
-    { big: `${en(PLASMA_ALLOCATION_PCT[i], 1)}%`, title: "Smallholder plasma partnership", text: `Well above the ${PLASMA_REGULATORY_MIN_PCT}% regulatory floor &mdash; ${en(PLASMA_ALLOCATION_PCT.length)} years of steady growth in smallholder land allocation.` },
-    { big: `${WORKFORCE.womenSharePct2025}%`, title: "Women in the workforce", text: `${en(WORKFORCE.total2025)} employees group-wide &middot; ${WORKFORCE.womenBoardPct}% of the Board are women.` },
+    { icon: SUSTAIN_ICONS.shield, big: `${RSPO_MILLS_CERTIFIED[i]}/${COMPANY.mills}`, title: "RSPO-certified mills", text: `${en(RSPO_CERTIFIED_HA[i])} ha certified (${RSPO_HGU_COVERAGE_PCT_2025}% of landbank) &middot; full certification targeted for ${RSPO_TARGET_YEAR}.` },
+    { icon: SUSTAIN_ICONS.leaf, big: `${GHG.netEmissions2025MtCo2e.toFixed(2)}M`, title: "Net tCO2e, FY2025", text: `Emission intensity down ${GHG.intensityReductionVs2016Pct}% vs. the 2016 baseline &middot; ${GHG.methaneCaptureFacilities} methane-capture facilities online.` },
+    { icon: SUSTAIN_ICONS.handshake, big: `${en(PLASMA_ALLOCATION_PCT[i], 1)}%`, title: "Smallholder plasma partnership", text: `Well above the ${PLASMA_REGULATORY_MIN_PCT}% regulatory floor &mdash; steady growth in smallholder land allocation.` },
+    { icon: SUSTAIN_ICONS.people, big: `${WORKFORCE.womenSharePct2025}%`, title: "Women in the workforce", text: `${en(WORKFORCE.total2025)} employees group-wide &middot; ${WORKFORCE.womenBoardPct}% of the Board are women.` },
   ];
   $("#sustain-cards").innerHTML = cards.map((c) => `
     <div class="sustain-card reveal">
+      <div class="sustain-icon">${c.icon}</div>
       <span class="sbig">${c.big}</span>
       <h4>${c.title}</h4>
       <p>${c.text}</p>

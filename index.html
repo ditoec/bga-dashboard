@@ -71,28 +71,90 @@
       <h2>From nucleus estate to export-ready product.</h2>
       <p>BGA Group's mills sit close to its own plantations and to independent smallholder suppliers, turning Fresh Fruit Bunches into Crude Palm Oil and Palm Kernel with a combined processing capacity of roughly 1,165 tonnes per hour.</p>
     </div>
+    <div class="map-card reveal">
+      <svg class="ops-map" viewBox="0 0 900 460" role="img" aria-labelledby="mapTitle mapDesc">
+        <title id="mapTitle">BGA Group's three operating provinces</title>
+        <desc id="mapDesc">A stylised map of Sumatra, Kalimantan and Java showing the Group's estates, mills and key towns.</desc>
+
+        <!-- Sumatra (stylised, not to scale) -->
+        <path class="landmass" d="M 96,26 C 150,14 196,44 214,96 C 232,150 220,206 176,236 C 132,264 78,250 54,204 C 30,158 34,96 96,26 Z" />
+        <!-- Kalimantan (stylised, not to scale) -->
+        <path class="landmass" d="M 430,44 C 528,4 654,16 726,78 C 792,134 806,214 774,288 C 742,362 656,406 566,396 C 478,386 420,332 396,254 C 372,176 366,100 430,44 Z" />
+        <!-- Java (stylised sliver) -->
+        <path class="landmass" d="M 280,404 C 366,384 470,384 556,396 C 610,404 646,414 644,424 C 642,434 578,442 480,440 C 384,438 306,428 280,414 Z" />
+
+        <!-- Region halos -->
+        <circle class="region-halo" cx="150" cy="120" r="46"/>
+        <circle class="region-halo" cx="470" cy="230" r="60"/>
+        <circle class="region-halo" cx="600" cy="200" r="60"/>
+
+        <!-- Mill / plantation clusters (original marker style) -->
+        <g class="cluster" data-cluster="kalbar">
+          <circle class="mk-plant" cx="452" cy="214" r="5"/>
+          <circle class="mk-mill" cx="466" cy="226" r="5"/>
+          <circle class="mk-plant" cx="440" cy="236" r="5"/>
+          <circle class="mk-plant" cx="472" cy="248" r="5"/>
+          <circle class="mk-mill" cx="486" cy="212" r="5"/>
+        </g>
+        <g class="cluster" data-cluster="kalteng">
+          <circle class="mk-plant" cx="592" cy="182" r="5"/>
+          <circle class="mk-mill" cx="608" cy="196" r="5"/>
+          <circle class="mk-plant" cx="580" cy="206" r="5"/>
+          <circle class="mk-plant" cx="614" cy="218" r="5"/>
+          <circle class="mk-mill" cx="626" cy="176" r="5"/>
+          <circle class="mk-plant" cx="600" cy="230" r="5"/>
+        </g>
+        <circle class="mk-mill" cx="150" cy="120" r="5"/>
+
+        <!-- Towns -->
+        <g class="town" transform="translate(150,120)"><circle r="3.5"/><text x="10" y="4">Pekanbaru</text></g>
+        <g class="town" transform="translate(452,214)"><circle r="3.5"/><text x="-10" y="-8" text-anchor="end">Ketapang</text></g>
+        <g class="town" transform="translate(398,180)"><circle r="3.5"/><text x="-10" y="4" text-anchor="end">Pontianak</text></g>
+        <g class="town" transform="translate(600,200)"><circle r="3.5"/><text x="12" y="-10">Palangkaraya</text></g>
+        <g class="town" transform="translate(470,420)"><circle r="3.5"/><text x="10" y="4">Jakarta</text></g>
+        <g class="town office" transform="translate(300,300)"><rect x="-3.5" y="-3.5" width="7" height="7"/><text x="10" y="4">Singapore</text></g>
+
+        <!-- Region labels -->
+        <text class="region-label" x="150" y="70">RIAU</text>
+        <text class="region-label" x="440" y="290">WEST KALIMANTAN</text>
+        <text class="region-label" x="600" y="130">CENTRAL KALIMANTAN</text>
+      </svg>
+      <div class="map-legend">
+        <span><i class="dot plant"></i>Nucleus / plasma estate</span>
+        <span><i class="dot mill"></i>CPO mill</span>
+        <span><i class="dot office"></i>Office</span>
+      </div>
+    </div>
     <div class="region-grid3" id="region-cards"></div>
     <div class="process-flow reveal-stagger">
       <div class="process-step">
-        <div class="process-icon">🌴</div>
+        <div class="process-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21V10"/><path d="M12 10C8 8 6 5 6 3c3 0 6 2 6 7Z"/><path d="M12 10c4-2 6-5 6-7-3 0-6 2-6 7Z"/><path d="M12 8c-3-1-5-3-6-5 2-1 5 0 6 5Z"/><path d="M12 8c3-1 5-3 6-5-2-1-5 0-6 5Z"/></svg>
+        </div>
         <h4>Nucleus &amp; plasma estates</h4>
         <p>Cultivation across three provinces</p>
       </div>
       <div class="process-arrow">→</div>
       <div class="process-step">
-        <div class="process-icon">🧺</div>
+        <div class="process-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M4 10h16l-2 10H6L4 10Z"/><path d="M4 10c0-3 3-5 8-5s8 2 8 5"/><circle cx="9" cy="14" r="1.3" fill="currentColor" stroke="none"/><circle cx="13" cy="15.5" r="1.3" fill="currentColor" stroke="none"/><circle cx="11" cy="12" r="1.3" fill="currentColor" stroke="none"/></svg>
+        </div>
         <h4>FFB harvest</h4>
         <p>Fresh Fruit Bunches, hand-graded</p>
       </div>
       <div class="process-arrow">→</div>
       <div class="process-step">
-        <div class="process-icon">🏭</div>
+        <div class="process-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M3 20V11l5 3v-3l5 3V8l6-3v15H3Z"/><path d="M17 5V2"/><path d="M3 20h16"/></svg>
+        </div>
         <h4>Milling</h4>
         <p>17 mills, ~1,165 tph capacity</p>
       </div>
       <div class="process-arrow">→</div>
       <div class="process-step">
-        <div class="process-icon">🛢️</div>
+        <div class="process-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M10 2h4"/><path d="M11 2v5l-4 4v9a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2v-9l-4-4V2"/><path d="M8 15h8"/></svg>
+        </div>
         <h4>CPO &amp; PK</h4>
         <p>Delivered to domestic refineries</p>
       </div>

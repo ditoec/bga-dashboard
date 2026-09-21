@@ -187,6 +187,38 @@ section { position: relative; padding: 120px 0; }
 .tilt-card:hover { box-shadow: 0 24px 60px rgba(0,0,0,0.45); }
 .tilt-card > * { transform: translateZ(20px); }
 
+/* ---------- Original SVG map ---------- */
+.map-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 24px 24px 18px;
+  margin-bottom: 22px;
+}
+.ops-map { width: 100%; height: auto; display: block; }
+.ops-map .landmass { fill: var(--surface-2); stroke: var(--border); stroke-width: 1; }
+.ops-map .region-halo { fill: var(--gold); opacity: 0.06; }
+.ops-map .mk-plant { fill: var(--green); }
+.ops-map .mk-mill { fill: var(--gold); }
+.ops-map .town circle { fill: var(--text-primary); }
+.ops-map .town.office rect { fill: var(--teal); stroke: none; }
+.ops-map .town text { fill: var(--text-secondary); font-size: 12px; font-family: var(--font-sans); }
+.ops-map .region-label { fill: var(--text-muted); font-size: 11px; letter-spacing: 0.08em; font-weight: 600; }
+.ops-map .cluster circle {
+  animation: pulseMarker 2.4s ease-in-out infinite;
+  transform-box: fill-box;
+  transform-origin: center;
+}
+.ops-map .cluster circle:nth-child(2n) { animation-delay: 0.4s; }
+.ops-map .cluster circle:nth-child(3n) { animation-delay: 0.8s; }
+@keyframes pulseMarker { 0%, 100% { opacity: 0.75; transform: scale(1); } 50% { opacity: 1; transform: scale(1.25); } }
+.map-legend { display: flex; gap: 22px; justify-content: center; margin-top: 8px; flex-wrap: wrap; }
+.map-legend span { display: inline-flex; align-items: center; gap: 7px; font-size: 12px; color: var(--text-secondary); }
+.map-legend .dot { width: 9px; height: 9px; border-radius: 50%; display: inline-block; }
+.map-legend .dot.plant { background: var(--green); }
+.map-legend .dot.mill { background: var(--gold); }
+.map-legend .dot.office { background: var(--teal); border-radius: 2px; }
+
 .region-grid3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 22px; }
 .region-card h3 { font-family: var(--font-display); font-size: 19px; margin: 0 0 4px; }
 .region-card .rtag { font-size: 11.5px; color: var(--gold); text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 14px; display: block; }
@@ -221,6 +253,8 @@ section { position: relative; padding: 120px 0; }
 .sustain-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; }
 .sustain-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 26px 22px; }
 .sustain-icon { width: 40px; height: 40px; margin-bottom: 16px; color: var(--teal); }
+.sustain-icon svg { width: 100%; height: 100%; }
+.process-icon svg { width: 26px; height: 26px; color: #fff; }
 .sustain-card h4 { font-size: 14.5px; margin: 0 0 8px; font-family: var(--font-display); }
 .sustain-card p { font-size: 12.5px; color: var(--text-secondary); line-height: 1.6; margin: 0; }
 .sustain-card .sbig { font-family: var(--font-display); font-size: 22px; color: var(--gold); font-weight: 600; display: block; margin-bottom: 6px; }
