@@ -25,7 +25,7 @@ function renderSiteHeader() {
 
   const brand = document.createElement("a");
   brand.className = "brand";
-  brand.href = "index.html";
+  brand.href = "../index.html";
   brand.innerHTML = `<span class="brand-mark">BGA</span>`;
   const brandText = document.createElement("div");
   brandText.className = "brand-text";
@@ -44,6 +44,11 @@ function renderSiteHeader() {
 
   const right = document.createElement("div");
   right.className = "header-right";
+  const backLink = document.createElement("a");
+  backLink.href = "../index.html";
+  backLink.className = "theme-toggle";
+  backLink.textContent = "← Situs Publik";
+  right.appendChild(backLink);
   const btn = document.createElement("button");
   btn.className = "theme-toggle";
   btn.id = "theme-toggle";

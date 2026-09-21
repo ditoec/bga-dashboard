@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Ringkasan — Dasbor BGA Group</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="../css/style.css" />
+</head>
+<body data-page="index.html">
+<div id="site-header"></div>
+<div class="app">
+
+  <div class="page-intro">
+    <p class="page-eyebrow">Ringkasan Grup</p>
+    <h2>Kinerja BGA Group, FY2025</h2>
+    <p>Titik masuk dasbor manajemen — capaian tahun berjalan dibandingkan FY2024, disusun dari Bumitama Agri Ltd. Annual Report 2025.</p>
+    <span class="asof" id="asof-label"></span>
+  </div>
+
+  <section class="kpi-grid" id="kpi-grid-ringkasan"></section>
+
+  <section class="grid-2">
+    <div class="card">
+      <div class="card-head">
+        <div>
+          <p class="card-title">Pendapatan &amp; EBITDA</p>
+          <p class="card-subtitle">2021–2025 · Rp triliun</p>
+        </div>
+        <div class="legend" id="legend-ringkasan-financial"></div>
+      </div>
+      <div class="chart-wrap" id="chart-ringkasan-financial"></div>
+    </div>
+    <div class="card">
+      <div class="card-head">
+        <div>
+          <p class="card-title">TBS Internal &amp; Produksi CPO</p>
+          <p class="card-subtitle">2021–2025 · ribu metrik ton</p>
+        </div>
+        <div class="legend" id="legend-ringkasan-produksi"></div>
+      </div>
+      <div class="chart-wrap" id="chart-ringkasan-produksi"></div>
+    </div>
+  </section>
+
+  <p class="section-title">Wilayah operasi</p>
+  <p class="section-subtitle">Tiga provinsi — lihat halaman Wilayah untuk rincian lengkap</p>
+  <section class="region-grid" id="ringkasan-region-cards"></section>
+
+  <p class="section-title">Jelajahi dasbor</p>
+  <section class="nav-card-grid">
+    <a class="nav-card" href="operasional.html"><p class="nav-card-title">Operasional</p><p class="nav-card-desc">TBS, CPO, PK, rendemen, produktivitas per hektare, komposisi kebun</p></a>
+    <a class="nav-card" href="wilayah.html"><p class="nav-card-title">Wilayah</p><p class="nav-card-desc">Kalimantan Tengah, Kalimantan Barat, Riau — kebun, pabrik &amp; tenaga kerja</p></a>
+    <a class="nav-card" href="keuangan.html"><p class="nav-card-title">Keuangan</p><p class="nav-card-desc">Laba rugi, neraca, margin, rasio, arus kas &amp; dividen</p></a>
+    <a class="nav-card" href="keberlanjutan.html"><p class="nav-card-title">Keberlanjutan</p><p class="nav-card-desc">RSPO/ISPO, emisi GHG, keragaman tenaga kerja, keselamatan kerja</p></a>
+    <a class="nav-card" href="kepemimpinan.html"><p class="nav-card-title">Kepemimpinan</p><p class="nav-card-desc">Dewan Komisaris/Direksi, manajemen kunci, milestone &amp; penghargaan</p></a>
+    <a class="nav-card" href="pemegang-saham.html"><p class="nav-card-title">Pemegang Saham</p><p class="nav-card-desc">Struktur kepemilikan, kapitalisasi pasar, statistik saham</p></a>
+  </section>
+
+</div>
+<div id="site-footer"></div>
+
+<script src="../js/data.js"></script>
+<script src="../js/charts.js"></script>
+<script src="../js/nav.js"></script>
+<script src="../js/app.js"></script>
+<script>document.getElementById("asof-label").textContent = AS_OF;</script>
+</body>
+</html>
